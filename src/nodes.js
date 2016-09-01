@@ -133,3 +133,6 @@ Nodes.attrHooks = {
  * @param ctx
  */
 export const toNodes = (elements, ctx) => new Nodes(elements, ctx);
+
+Nodes.toNodes = toNodes;
+

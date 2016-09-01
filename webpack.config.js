@@ -28,7 +28,7 @@ module.exports = function (options) {
         output: {
             path: path.join(__dirname, 'lib'),
             libraryTarget: 'commonjs2',
-            library: ['ValidateForm', '[name]'],
+            library: ['domUtils', '[name]'],
             filename: '[name].js'
         },
         externals: [{

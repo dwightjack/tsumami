@@ -90,8 +90,8 @@ gulp.task('scripts:umd', function () {
         output: {
             path: path.join(__dirname, paths.umd),
             libraryTarget: 'umd',
-            library: 'ValidateForm',
-            filename: 'dom.js'
+            library: 'domUtils',
+            filename: 'index.js'
         }
     }, webpackConf);
 
