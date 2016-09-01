@@ -1,4 +1,4 @@
-# DOM Utilities
+# DOM Utilities (beta release)
 
 > DOM Utility functions
 
