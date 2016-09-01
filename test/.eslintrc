@@ -1,0 +1,40 @@
+{
+    "extends": "../.eslintrc",
+
+    "env": {
+		"commonjs": true,
+		"es6": true
+    },
+
+	"parser": "babel-eslint",          // https://github.com/babel/babel-eslint
+
+	"parserOptions": {
+		"ecmaVersion": 6,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"arrowFunctions": true,
+			"blockBindings": true,
+			"classes": true,
+			"defaultParams": true,
+			"destructuring": true,
+			"forOf": true,
+			"generators": false,
+			"objectLiteralComputedProperties": true,
+			"objectLiteralDuplicateProperties": false,
+			"objectLiteralShorthandMethods": true,
+			"objectLiteralShorthandProperties": true,
+			"spread": true,
+			"superInFunctions": true,
+			"templateStrings": true,
+			"jsx": false
+		}
+	},
+
+	"rules": {
+		/**
+         * ES6
+         */
+		"no-var": 0,                     // http://eslint.org/docs/rules/no-var
+		"prefer-const": 0                // http://eslint.org/docs/rules/prefer-const
+	}
+}

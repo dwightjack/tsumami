@@ -6,3 +6,4 @@ nbproject
 .idea
 .externalToolBuilders
 docs/*
+.DS_Store

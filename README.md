@@ -2,8 +2,6 @@
 
 > DOM Utility functions
 
-UMD, CJS, ES6 package. Available as a single package and individual chunks.  
-
 ## Installation
 
 ```
@@ -17,15 +15,28 @@ _Note: a valid ssh access key is required_
 Import individual functions and classes into your project
  
 ```js
-import {byId, qsa} from 'dom-utils';
+import { byId, qsa } from 'dom-utils';
+import events from 'dom-utils/lib/events';
 
 //like querySelectorAll but returns an array
 const articles = qsa('.c-articles');
-
 //it's an array
-Array.isArray(articles) === true
+//Array.isArray(articles) === true
+
+const form = byId('my-form');
+
+events.on(form, 'submit', (e) => {
+    //...
+});
 
 ```
+
+**Modules Docs**
+
+* [dom-utils](doc/dom.md)
+* [dom-utils/lib/events](doc/events.md)
+* [dom-utils/lib/nodes](doc/nodes.md)
+* [dom-utils/lib/utils](doc/utils.md)
 
 ## Contributing
 

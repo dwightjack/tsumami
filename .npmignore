@@ -3,10 +3,11 @@
 src
 test
 demos
+build
 .babelrc
 .editorconfig
 .eslintrc
+bower.json
 gulpfile.js
 karma.conf.js
 webpack.config.js
-jsdoc.conf.json

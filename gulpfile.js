@@ -62,7 +62,7 @@ banner = [
 
 
 gulp.task('clean', function (done) {
-    del([paths.dist, paths.umd, 'jsdoc'], {dot: true}).then(function () {
+    del([paths.dist, paths.umd, 'doc'], {dot: true}).then(function () {
         done();
     });
 });
@@ -74,24 +74,15 @@ gulp.task('lint', function () {
         .pipe($.eslint.failAfterError());
 });
 
-
-// gulp.task('jsdoc', function (done) {
-//     var config = require('./jsdoc.conf.json');
-//
-//     gulp.src(['README.md', 'src/**/*.js', '!src/umd.js'], {read: false})
-//         .pipe($.jsdoc3(config, done));
-// });
-
-
 gulp.task('jsdoc', function () {
     return gulp.src(['src/**/*.js', '!src/umd.js'])
-        .pipe($.markdox())
+        .pipe($.markdox({
+            template: path.join(process.cwd(), 'var', 'template.md.ejs')
+        }))
         .pipe($.rename({extname: '.md'}))
+        // .pipe($.if('**/dom.md', $.rename({basename: 'README'})))
         .pipe(gulp.dest('./doc'));
 });
-
-
-
 
 gulp.task('scripts:umd', function () {
 
@@ -100,7 +91,7 @@ gulp.task('scripts:umd', function () {
             path: path.join(__dirname, paths.umd),
             libraryTarget: 'umd',
             library: 'ValidateForm',
-            filename: 'index.js'
+            filename: 'dom.js'
         }
     }, webpackConf);
 
@@ -138,6 +129,33 @@ gulp.task('build', function (done) {
 });
 
 gulp.task('test', function (done) {
+
+    var Server = require('karma').Server;
+
+    var server = new Server(_.defaults({
+        frameworks: ['mocha', 'fixture', 'detectBrowsers'],
+        singleRun: true,
+        browsers: [],
+        detectBrowsers: {
+            postDetection: function (availableBrowser) {
+                return _.difference(availableBrowser, [
+                    'ChromeCanary',
+                    'PhantomJS'
+                ]);
+            }
+        }
+
+    }, karmaConf));
+
+    server.on('run_complete', function (browsers, results) {
+        done(results.error ? 'There are test failures' : null);
+    });
+
+    server.start();
+
+});
+
+gulp.task('test:headless', function (done) {
 
     var Server = require('karma').Server;
 

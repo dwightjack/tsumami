@@ -1,15 +1,14 @@
-module.exports = function(config) {
+module.exports = function (config) {
     config.set({
         browsers: ['PhantomJS'],
-        frameworks: ['jasmine'],
+        frameworks: ['mocha', 'fixture'],
         reporters: ['progress'],
         basePath: '',
         files: [
             //{pattern: 'test/fixtures/*.html', watched: false, included: false, served: true},
             'node_modules/babel-polyfill/dist/polyfill.js',
             'test/fixtures/*.html',
-            'test/test.conf.js',
-            'test/*.spec.js'
+            'test/**/*.spec.js'
         ],
 
         webpackMiddleware: {
