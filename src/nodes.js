@@ -1,5 +1,5 @@
 import { qsa, toArray, addClass, removeClass, toggleClass } from './dom';
-import { toCamelCase } from './utils';
+import { result } from './utils';
 
 /**
  * Chainable *jQuery-like* list of nodes
@@ -48,6 +48,17 @@ export default class Nodes {
     }
 
     /**
+     * Iterates `iterator` function on every element in the set
+     *
+     * @param {function} iterator - Iterator function
+     * @returns {Element|undefined}
+     */
+    forEach(iterator) {
+        this.els.forEach(iterator);
+        return this;
+    }
+
+    /**
      * Returns the index of an element in the current list or `-1` if not found
      *
      * @param {Element} target - Target element
@@ -66,18 +77,15 @@ export default class Nodes {
      */
     attr(attr, value) {
         const {els} = this;
-        const attrStr = toCamelCase(attr);
         if (value !== undefined) {
-            const iteratorFn = typeof value === 'function' ? value : (el) => (el[attrStr] = value);
-            this.els.forEach(iteratorFn);
+            this.forEach((el) => el.setAttribute(attr, result(value, el)));
             return this;
         }
         const el = els.length > 0 ? els[0] : undefined;
-        const hook = NodeList.attrHooks[attrStr];
         if (!el) {
             return undefined;
         }
-        return hook ? hook(el) : el[attrStr];
+        return el.getAttribute(attr);
     }
 
     /**
@@ -87,7 +95,7 @@ export default class Nodes {
      * @returns {Nodes}
      */
     addClass(className) {
-        this.els.forEach((el) => (addClass(el, className)));
+        this.forEach((el) => (addClass(el, className)));
         return this;
     }
 
@@ -98,7 +106,7 @@ export default class Nodes {
      * @returns {Nodes}
      */
     removeClass(className) {
-        this.els.forEach((el) => (removeClass(el, className)));
+        this.forEach((el) => (removeClass(el, className)));
         return this;
     }
 
@@ -110,21 +118,10 @@ export default class Nodes {
      * @returns {Nodes}
      */
     toggleClass(className, toggle) {
-        this.els.forEach((el) => (toggleClass(el, className, toggle)));
+        this.forEach((el) => (toggleClass(el, className, toggle)));
         return this;
     }
 }
-
-/**
- * HTML to DOM attrubute translation hooks
- *
- * @static
- * @type {object}
- */
-Nodes.attrHooks = {
-    'for': (el) => el.htmlFor,
-    'class': (el) => el.className
-};
 
 /**
  * Returns a new `Nodes` instance
@@ -135,4 +132,3 @@ Nodes.attrHooks = {
 export const toNodes = (elements, ctx) => new Nodes(elements, ctx);
 
 Nodes.toNodes = toNodes;
-

@@ -1,8 +1,6 @@
 import classie from 'desandro-classie';
 
-import { parseString } from './utils';
-
-
+import { parseString, arrayFrom } from './utils';
 
 /**
  * # DOM Utility Functions
@@ -46,7 +44,7 @@ export const byId = (id) => document.getElementById(id);
  * @param {Element|Document} [ctx=document] - Root element. `document` by default
  * @return {Array}
  */
-export const byClassName = (className, ctx = document) => Array.toArray(ctx.getElementsByClassName(className));
+export const byClassName = (className, ctx = document) => arrayFrom(ctx.getElementsByClassName(className));
 
 /**
  * Returns the first element within the document that matches the specified group of selectors
@@ -86,7 +84,7 @@ export const qs = (selector, ctx = document) => ctx.querySelector(selector);
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
  * @return {Array}
  */
-export const qsa = (selector, ctx = document) => Array.from(ctx.querySelectorAll(selector));
+export const qsa = (selector, ctx = document) => arrayFrom(ctx.querySelectorAll(selector));
 
 /**
  * Returns a parsed data attribute from the passed-in node. If not found returns `null`
@@ -140,7 +138,7 @@ export const toArray = (element) => {
     if (Array.isArray(element)) {
         return element;
     }
-    return (element instanceof NodeList) ? Array.from(element) : [element];
+    return (element instanceof NodeList) ? arrayFrom(element) : [element];
 };
 
 /**

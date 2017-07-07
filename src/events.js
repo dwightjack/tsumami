@@ -190,7 +190,9 @@ const events = {
 
         if (Array.isArray(registryEl[event])) {
 
-            const delegateHandler = registryEl[event].find((h) => h.originalHandler === handler && h.selector === selector);
+            const delegateHandler = registryEl[event].filter((h) => (
+                h.originalHandler === handler && h.selector === selector)
+            )[0];
 
             if (typeof delegateHandler === 'function') {
                 this.off(element, event, delegateHandler, capture);
