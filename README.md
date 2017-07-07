@@ -5,10 +5,8 @@
 ## Installation
 
 ```
-npm install git+ssh://git@git.aquest.it:5022/frontenders/dom-utils.git#develop
+npm install dom-utils
 ```
-
-_Note: a valid ssh access key is required_
 
 ## Usage
 
@@ -42,7 +40,7 @@ events.on(form, 'submit', (e) => {
 
 1. Fork it or clone the repo
 1. Install dependencies `npm install`
-1. Run `gulp serve` to launch a development server
+1. Run `npm start` to launch a development server
 1. Code your changes and write new tests in the `tests` folder.
-1. Ensure everything is fine by running `gulp build`
+1. Ensure everything is fine by running `npm run build`
 1. Push it or submit a pull request :D

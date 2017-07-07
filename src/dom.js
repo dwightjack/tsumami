@@ -7,7 +7,6 @@ import { parseString, arrayFrom } from './utils';
  */
 
 
-
 /**
  * Returns a reference to the element by its ID.
  *
@@ -109,7 +108,9 @@ export const qsa = (selector, ctx = document) => arrayFrom(ctx.querySelectorAll(
  * @param {string} attr - Data attribute to retrieve (without the `data-`)
  * @return {*|null}
  */
-export const data = (element, attr) => element.hasAttribute('data-' + attr) ? parseString(element.getAttribute('data-' + attr)) : undefined;
+export const data = (element, attr) => (
+    element.hasAttribute('data-' + attr) ? parseString(element.getAttribute('data-' + attr)) : undefined
+);
 
 /**
  * Converts passed-in Element or NodeList to an array.
@@ -167,7 +168,7 @@ export const parents = (element, selector) => {
     const hasSelector = selector !== undefined;
     let parent = element.parentElement;
 
-    while (parent !== null &&  parent !== document) {
+    while (parent !== null && parent !== document) {
         if (!hasSelector || parent.matches(selector)) {
             elements.push(parent);
         }
@@ -310,6 +311,3 @@ export const toggleClass = (element, className, toggle) => {
     const fn = toggle === undefined ? 'toggle' : (toggle ? 'add' : 'remove'); //eslint-disable-line no-nested-ternary
     classie[fn](element, className);
 };
-
-
-

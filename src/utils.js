@@ -23,7 +23,7 @@ export const toCamelCase = (str) => str.replace(CAMEL_CASE_REGEXP, (match) => ma
  * @param {...arguments} - Optional arguments
  * @return {*}
  */
-export const result = (obj, ...args) => typeof obj === 'function' ? obj(...args) : obj;
+export const result = (obj, ...args) => (typeof obj === 'function' ? obj(...args) : obj);
 
 
 /**
@@ -36,7 +36,7 @@ export const result = (obj, ...args) => typeof obj === 'function' ? obj(...args)
  * @see https://api.jquery.com/jQuery.isNumeric/
  */
 export const isNumeric = (obj) => {
-    return ( typeof obj === 'number' || typeof obj === 'string' ) && !isNaN( obj - parseFloat( obj ) );
+    return (typeof obj === 'number' || typeof obj === 'string') && !isNaN(obj - parseFloat(obj));
 };
 
 /**

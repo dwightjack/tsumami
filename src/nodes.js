@@ -11,6 +11,10 @@ import { result } from './utils';
  */
 export default class Nodes {
 
+    static toNodes(...args) {
+        return new Nodes(...args);
+    }
+
     /**
      * Constructor
      */
@@ -76,7 +80,7 @@ export default class Nodes {
      * @returns {*|Nodes}
      */
     attr(attr, value) {
-        const {els} = this;
+        const { els } = this;
         if (value !== undefined) {
             this.forEach((el) => el.setAttribute(attr, result(value, el)));
             return this;
@@ -121,14 +125,5 @@ export default class Nodes {
         this.forEach((el) => (toggleClass(el, className, toggle)));
         return this;
     }
+
 }
-
-/**
- * Returns a new `Nodes` instance
- *
- * @param elements
- * @param ctx
- */
-export const toNodes = (elements, ctx) => new Nodes(elements, ctx);
-
-Nodes.toNodes = toNodes;

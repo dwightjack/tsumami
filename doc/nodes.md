@@ -43,6 +43,18 @@ Returns an element at the given index or `undefined`
 
 * **`Element`** 
 
+## forEach(iterator)
+
+Iterates `iterator` function on every element in the set
+
+#### Params:
+
+* **`function`** *iterator* - Iterator function
+
+#### Return:
+
+* **`Element`** 
+
 ## indexOf(target)
 
 Returns the index of an element in the current list or `-1` if not found
@@ -104,17 +116,6 @@ Toggles a class on the elements
 #### Return:
 
 * **`Nodes`** 
-
-## attrHooks 
-
-HTML to DOM attrubute translation hooks
-
-Returns a new `Nodes` instance
-
-#### Params:
-
-* *elements* 
-* *ctx* 
 
 <!-- End src/nodes.js -->
 
