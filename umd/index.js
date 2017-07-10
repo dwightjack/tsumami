@@ -108,6 +108,17 @@ var utils = Object.freeze({
 	arrayFrom: arrayFrom
 });
 
+/* eslint-disable */
+if (!Element.prototype.matches) {
+    Element.prototype.matches = Element.prototype.matchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.msMatchesSelector || Element.prototype.oMatchesSelector || Element.prototype.webkitMatchesSelector || function (s) {
+        var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+            i = matches.length;
+        while (--i >= 0 && matches.item(i) !== this) {}
+        return i > -1;
+    };
+}
+/* eslint-enable */
+
 /**
  * # DOM Utility Functions
  */
@@ -131,7 +142,7 @@ var utils = Object.freeze({
  *
  */
 var byId = function byId(id) {
-  return document.getElementById(id);
+    return document.getElementById(id);
 };
 
 /**
@@ -151,8 +162,8 @@ var byId = function byId(id) {
  * @return {Array}
  */
 var byClassName = function byClassName(className) {
-  var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
-  return arrayFrom(ctx.getElementsByClassName(className));
+    var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+    return arrayFrom(ctx.getElementsByClassName(className));
 };
 
 /**
@@ -174,8 +185,8 @@ var byClassName = function byClassName(className) {
  * @return {Element|null}
  */
 var qs = function qs(selector) {
-  var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
-  return ctx.querySelector(selector);
+    var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+    return ctx.querySelector(selector);
 };
 
 /**
@@ -197,8 +208,8 @@ var qs = function qs(selector) {
  * @return {Array}
  */
 var qsa = function qsa(selector) {
-  var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
-  return arrayFrom(ctx.querySelectorAll(selector));
+    var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+    return arrayFrom(ctx.querySelectorAll(selector));
 };
 
 /**
@@ -221,11 +232,26 @@ var qsa = function qsa(selector) {
  * @name data
  * @function
  * @param {Element} element - DOM Element
- * @param {string} attr - Data attribute to retrieve (without the `data-`)
+ * @param {string} [attr] - Data attribute to retrieve (without the `data-`). If empty will return an object with every `data-` attribute as key.
  * @return {*|null}
  */
 var data = function data(element, attr) {
-  return element.hasAttribute('data-' + attr) ? parseString(element.getAttribute('data-' + attr)) : undefined;
+    if (attr) {
+        return element.hasAttribute('data-' + attr) ? parseString(element.getAttribute('data-' + attr)) : undefined;
+    }
+    var attributes = element.attributes;
+    return element.hasAttributes() ? arrayFrom(attributes).reduce(function (attrs, a, i) {
+        var _ref = attributes[i] || {},
+            _ref$name = _ref.name,
+            name = _ref$name === undefined ? '' : _ref$name,
+            value = _ref.value;
+
+        if (name.indexOf('data-') === 0) {
+            var key = toCamelCase(name.replace(/^data-/, ''));
+            attrs[key] = parseString(value); //eslint-disable-line no-param-reassign
+        }
+        return attrs;
+    }, {}) : {};
 };
 
 /**
@@ -252,10 +278,10 @@ var data = function data(element, attr) {
  * @return {array}
  */
 var toArray = function toArray(element) {
-  if (Array.isArray(element)) {
-    return element;
-  }
-  return element instanceof NodeList ? arrayFrom(element) : [element];
+    if (Array.isArray(element)) {
+        return element;
+    }
+    return element instanceof NodeList ? arrayFrom(element) : [element];
 };
 
 /**
@@ -280,23 +306,24 @@ var toArray = function toArray(element) {
  * @returns {Array}
  */
 var parents = function parents(element, selector) {
-  var elements = [];
-  var hasSelector = selector !== undefined;
-  var parent = element.parentElement;
+    var elements = [];
+    var hasSelector = selector !== undefined;
+    var parent = element.parentElement;
 
-  while (parent !== null && parent !== document) {
-    if (!hasSelector || parent.matches(selector)) {
-      elements.push(parent);
+    while (parent !== null && parent !== document) {
+        if (!hasSelector || parent.matches(selector)) {
+            elements.push(parent);
+        }
+        parent = parent.parentElement;
     }
 
-    parent = parent.parentElement;
-  }
-
-  return elements;
+    return elements;
 };
 
 /**
  * Gets the first element that matches `selector` by testing the element itself and traversing up through its ancestors in the DOM tree.
+ *
+ * Will use native [`Element.prototype.closest`](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest) if available.
  *
  * #### Example:
  *
@@ -312,22 +339,21 @@ var parents = function parents(element, selector) {
  * @function
  * @param {Element} element - Source element
  * @param {string} selector - A string containing a CSS selector expression to match
- * @param {boolean} [checkSelf=true] - try to match the selector on `element` too.
  * @returns {*}
  */
-var closest = function closest(element, selector) {
-  var checkSelf = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+var closest = Element.prototype.closest || function closest(element, selector) {
+    var checkSelf = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-  var parent = checkSelf ? element : element.parentElement;
+    var parent = checkSelf ? element : element.parentElement;
 
-  while (parent && parent !== document) {
-    if (parent.matches(selector)) {
-      return parent;
+    while (parent && parent !== document) {
+        if (parent.matches(selector)) {
+            return parent;
+        }
+        parent = parent.parentElement;
     }
-    parent = parent.parentElement;
-  }
 
-  return undefined;
+    return undefined;
 };
 
 /**
@@ -393,8 +419,8 @@ var removeClass = classie.removeClass;
 var hasClass = classie.hasClass;
 
 var toggleClass = function toggleClass(element, className, toggle) {
-  var fn = toggle === undefined ? 'toggle' : toggle ? 'add' : 'remove'; //eslint-disable-line no-nested-ternary
-  classie[fn](element, className);
+    var fn = toggle === undefined ? 'toggle' : toggle ? 'add' : 'remove'; //eslint-disable-line no-nested-ternary
+    classie[fn](element, className);
 };
 
 var dom = Object.freeze({
@@ -412,21 +438,45 @@ var dom = Object.freeze({
 	toggleClass: toggleClass
 });
 
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
 var forceCaptureEvents = ['focus', 'blur'];
 
-var eventsRegistry = {};
-
 /**
- * # DOM Event Handlers
+ * DOM events handler
+ *
+ * @name EventManager
+ * @class
  */
 
-/**
- *
- * Event namespace
- *
- * @type {object}
- */
-var events = {
+var EventManager = function () {
+    function EventManager() {
+        classCallCheck(this, EventManager);
+
+        this.eventsRegistry = {};
+    }
 
     /**
      * Adds an event handler and returns the unbind function
@@ -453,7 +503,9 @@ var events = {
      * @param {boolean} [capture=false] - Whether to use event capturing
      * @returns {function}
      */
-    on: function on(element, event, handler) {
+
+
+    EventManager.prototype.on = function on(element, event, handler) {
         var _this = this;
 
         var capture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
@@ -465,7 +517,7 @@ var events = {
             return _this.off(element, event, handler, capture);
         };
 
-        var registryEl = eventsRegistry[element] || (eventsRegistry[element] = {});
+        var registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
         if (Array.isArray(registryEl[event])) {
             registryEl[event].push(handler);
         } else {
@@ -473,8 +525,7 @@ var events = {
         }
 
         return offHandler;
-    },
-
+    };
 
     /**
      * Removes an event handler
@@ -501,11 +552,13 @@ var events = {
      * @param {function} handler - Event handler
      * @param {boolean} [capture=false] - Whether to use event capturing
      */
-    off: function off(element, event, handler) {
+
+
+    EventManager.prototype.off = function off(element, event, handler) {
         var capture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
 
-        var registryEl = eventsRegistry[element] || (eventsRegistry[element] = {});
+        var registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
         if (Array.isArray(registryEl[event])) {
             if (handler !== undefined) {
                 var handlerIdx = registryEl[event].indexOf(handler);
@@ -521,8 +574,7 @@ var events = {
                 }
             }
         }
-    },
-
+    };
 
     /**
      * Attaches an event handler for all elements that match the selector, now or in the future, based on a specific root element.
@@ -554,7 +606,9 @@ var events = {
      * @param {boolean} [capture=true] - Whether to use event capturing
      * @returns {function}
      */
-    delegate: function delegate(element, selector, event, handler) {
+
+
+    EventManager.prototype.delegate = function delegate(element, selector, event, handler) {
         var capture = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
 
         if (forceCaptureEvents.indexOf(event) !== -1) {
@@ -563,7 +617,7 @@ var events = {
 
         var delegateHandler = function delegateHandler(e) {
             var target = e.target || e.srcElement;
-            e.delegateTarget = closest(target, selector, true);
+            e.delegateTarget = closest(target, selector);
             if (e.delegateTarget) {
                 handler.call(element, e);
             }
@@ -572,8 +626,7 @@ var events = {
         delegateHandler.selector = selector;
 
         return this.on(element, event, delegateHandler, capture);
-    },
-
+    };
 
     /**
      * Removes an event handler for all elements that match the selector, now or in the future, based on a specific root element.
@@ -604,14 +657,16 @@ var events = {
      * @param {boolean} [capture=true] - Whether to use event capturing
      * @returns {function}
      */
-    undelegate: function undelegate(element, selector, event, handler) {
+
+
+    EventManager.prototype.undelegate = function undelegate(element, selector, event, handler) {
         var capture = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
 
         if (forceCaptureEvents.indexOf(event) !== -1) {
             capture = true; // eslint-disable-line no-param-reassign
         }
 
-        var registryEl = eventsRegistry[element] || (eventsRegistry[element] = {});
+        var registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
 
         if (Array.isArray(registryEl[event])) {
 
@@ -623,32 +678,25 @@ var events = {
                 this.off(element, event, delegateHandler, capture);
             }
         }
-    }
-};
+    };
 
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
+    EventManager.prototype.destroy = function destroy() {
+        this.off();
+    };
 
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
+    return EventManager;
 }();
+
+/**
+ *
+ * # DOM events handler
+ *
+ * @name events
+ * @type {object}
+ */
+
+
+var events = new EventManager();
 
 /**
  * Chainable *jQuery-like* list of nodes
@@ -815,7 +863,7 @@ var Nodes = function () {
 }();
 
 var umd = {
-    dom: dom, events: events, utils: utils, Nodes: Nodes
+    dom: dom, events: events, utils: utils, Nodes: Nodes, EventManager: EventManager
 };
 
 return umd;

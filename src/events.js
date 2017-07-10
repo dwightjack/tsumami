@@ -2,19 +2,17 @@ import { closest } from './dom';
 
 const forceCaptureEvents = ['focus', 'blur'];
 
-const eventsRegistry = {};
-
 /**
- * # DOM Event Handlers
+ * DOM events handler
+ *
+ * @name EventManager
+ * @class
  */
+class EventManager {
 
-/**
- *
- * Event namespace
- *
- * @type {object}
- */
-const events = {
+    constructor() {
+        this.eventsRegistry = {};
+    }
 
     /**
      * Adds an event handler and returns the unbind function
@@ -47,7 +45,7 @@ const events = {
 
         const offHandler = () => this.off(element, event, handler, capture);
 
-        const registryEl = eventsRegistry[element] || (eventsRegistry[element] = {});
+        const registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
         if (Array.isArray(registryEl[event])) {
             registryEl[event].push(handler);
         } else {
@@ -55,8 +53,7 @@ const events = {
         }
 
         return offHandler;
-
-    },
+    }
 
     /**
      * Removes an event handler
@@ -85,7 +82,7 @@ const events = {
      */
     off(element, event, handler, capture = false) {
 
-        const registryEl = eventsRegistry[element] || (eventsRegistry[element] = {});
+        const registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
         if (Array.isArray(registryEl[event])) {
             if (handler !== undefined) {
                 const handlerIdx = registryEl[event].indexOf(handler);
@@ -101,8 +98,7 @@ const events = {
                 }
             }
         }
-
-    },
+    }
 
     /**
      * Attaches an event handler for all elements that match the selector, now or in the future, based on a specific root element.
@@ -150,7 +146,7 @@ const events = {
         delegateHandler.selector = selector;
 
         return this.on(element, event, delegateHandler, capture);
-    },
+    }
 
     /**
      * Removes an event handler for all elements that match the selector, now or in the future, based on a specific root element.
@@ -186,7 +182,7 @@ const events = {
             capture = true; // eslint-disable-line no-param-reassign
         }
 
-        const registryEl = eventsRegistry[element] || (eventsRegistry[element] = {});
+        const registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
 
         if (Array.isArray(registryEl[event])) {
 
@@ -202,6 +198,22 @@ const events = {
 
 
     }
-};
 
-export default events;
+    destroy() {
+        this.off();
+    }
+
+}
+
+/**
+ *
+ * # DOM events handler
+ *
+ * @name events
+ * @type {object}
+ */
+const events = new EventManager();
+export {
+    events,
+    EventManager
+};
