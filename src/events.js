@@ -141,7 +141,7 @@ const events = {
 
         const delegateHandler = (e) => {
             const target = e.target || e.srcElement;
-            e.delegateTarget = closest(target, selector, true);
+            e.delegateTarget = closest(target, selector);
             if (e.delegateTarget) {
                 handler.call(element, e);
             }
