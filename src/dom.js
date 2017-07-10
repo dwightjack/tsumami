@@ -1,6 +1,23 @@
 import classie from 'desandro-classie';
 
-import { parseString, arrayFrom } from './utils';
+import { parseString, arrayFrom, toCamelCase } from './utils';
+
+/* eslint-disable */
+if (!Element.prototype.matches) {
+    Element.prototype.matches =
+        Element.prototype.matchesSelector ||
+        Element.prototype.mozMatchesSelector ||
+        Element.prototype.msMatchesSelector ||
+        Element.prototype.oMatchesSelector ||
+        Element.prototype.webkitMatchesSelector ||
+        function (s) {
+            var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                i = matches.length;
+            while (--i >= 0 && matches.item(i) !== this) { }
+            return i > -1;
+        };
+}
+/* eslint-enable */
 
 /**
  * # DOM Utility Functions
@@ -105,12 +122,23 @@ export const qsa = (selector, ctx = document) => arrayFrom(ctx.querySelectorAll(
  * @name data
  * @function
  * @param {Element} element - DOM Element
- * @param {string} attr - Data attribute to retrieve (without the `data-`)
+ * @param {string} [attr] - Data attribute to retrieve (without the `data-`). If empty will return an object with every `data-` attribute as key.
  * @return {*|null}
  */
-export const data = (element, attr) => (
-    element.hasAttribute('data-' + attr) ? parseString(element.getAttribute('data-' + attr)) : undefined
-);
+export const data = (element, attr) => {
+    if (attr) {
+        return element.hasAttribute('data-' + attr) ? parseString(element.getAttribute('data-' + attr)) : undefined;
+    }
+    const attributes = element.attributes;
+    return element.hasAttributes() ? arrayFrom(attributes).reduce((attrs, a, i) => {
+        const { name = '', value } = attributes[i] || {};
+        if (name.indexOf('data-') === 0) {
+            const key = toCamelCase(name.replace(/^data-/, ''));
+            attrs[key] = parseString(value); //eslint-disable-line no-param-reassign
+        }
+        return attrs;
+    }, {}) : {};
+};
 
 /**
  * Converts passed-in Element or NodeList to an array.
@@ -172,7 +200,6 @@ export const parents = (element, selector) => {
         if (!hasSelector || parent.matches(selector)) {
             elements.push(parent);
         }
-
         parent = parent.parentElement;
     }
 
@@ -181,6 +208,8 @@ export const parents = (element, selector) => {
 
 /**
  * Gets the first element that matches `selector` by testing the element itself and traversing up through its ancestors in the DOM tree.
+ *
+ * Will use native [`Element.prototype.closest`](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest) if available.
  *
  * #### Example:
  *
@@ -196,10 +225,9 @@ export const parents = (element, selector) => {
  * @function
  * @param {Element} element - Source element
  * @param {string} selector - A string containing a CSS selector expression to match
- * @param {boolean} [checkSelf=true] - try to match the selector on `element` too.
  * @returns {*}
  */
-export const closest = (element, selector, checkSelf = true) => {
+export const closest = Element.prototype.closest || function closest(element, selector, checkSelf = true) {
     let parent = checkSelf ? element : element.parentElement;
 
     while (parent && parent !== document) {
