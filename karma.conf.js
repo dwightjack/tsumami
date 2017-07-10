@@ -50,7 +50,8 @@ module.exports = (config) => {
                 }),
                 require('rollup-plugin-replace')({ //eslint-disable-line
                     'process.env.NODE_DEBUG': !production
-                })
+                }),
+                require('rollup-plugin-node-globals')() //eslint-disable-line
             ],
             format: 'iife',               // Helps prevent naming collisions.
             moduleName: 'domUtils', // Required for 'iife' format.
