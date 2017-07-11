@@ -1,4 +1,4 @@
-import { closest } from './dom';
+import { matches } from './dom';
 
 const forceCaptureEvents = ['focus', 'blur'];
 
@@ -11,6 +11,14 @@ const forceCaptureEvents = ['focus', 'blur'];
 class EventManager {
 
     constructor() {
+
+        /**
+         * Event Handler Registry
+         *
+         * @property
+         * @public
+         * @type {object}
+         */
         this.eventsRegistry = {};
     }
 
@@ -45,12 +53,8 @@ class EventManager {
 
         const offHandler = () => this.off(element, event, handler, capture);
 
-        const registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
-        if (Array.isArray(registryEl[event])) {
-            registryEl[event].push(handler);
-        } else {
-            registryEl[event] = [handler];
-        }
+        const registryEl = this.eventsRegistry[event] || (this.eventsRegistry[event] = []);
+        registryEl.push({ handler, element, off: offHandler });
 
         return offHandler;
     }
@@ -72,31 +76,63 @@ class EventManager {
      * //later on...
      *
      * events.off(btn, 'click', handler);
+     *
+     * //remove all handler for a given event
+     * events.off(btn, 'click');
+     *
+     * //remove all handler from an element
+     * events.off(btn);
      * ```
      *
      * @method
-     * @param {Element} element - Target element
-     * @param {string} event - Event to remove
-     * @param {function} handler - Event handler
+     * @param {Element} [element] - Target element
+     * @param {string} [event] - Event to remove
+     * @param {function} [handler] - Event handler
      * @param {boolean} [capture=false] - Whether to use event capturing
      */
     off(element, event, handler, capture = false) {
 
-        const registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
-        if (Array.isArray(registryEl[event])) {
-            if (handler !== undefined) {
-                const handlerIdx = registryEl[event].indexOf(handler);
-                if (handlerIdx !== -1) {
-                    registryEl.splice(handlerIdx, 1);
+        if (arguments.length === 0) {
+            //remove evenry handler
+            Object.keys(this.eventsRegistry).forEach((ev) => {
+                const registryEl = this.eventsRegistry[ev];
+                let h = registryEl.pop();
+
+                while (h) {
+                    h.off();
+                    h = registryEl.pop();
                 }
-                element.removeEventListener(event, handler, capture);
-            } else {
-                let handleFn = registryEl[event].pop();
-                while (handleFn) {
-                    element.removeEventListener(event, handleFn, capture);
-                    handleFn = registryEl[event].pop();
+            });
+            this.eventsRegistry = {};
+            return;
+        }
+
+        if (!event && !handler) {
+            Object.keys(this.eventsRegistry).forEach((ev) => {
+                this.off(element, ev, undefined, capture);
+            });
+            return;
+        }
+
+        const registryEl = this.eventsRegistry[event];
+
+        if (!event || !this.eventsRegistry[event]) {
+            return;
+        }
+
+        if (handler) {
+            this.eventsRegistry[event] = registryEl.filter((e) => (
+                e.element !== element || e.handler !== handler
+            ));
+            element.removeEventListener(event, handler, capture);
+        } else {
+            this.eventsRegistry[event] = registryEl.filter((e) => {
+                if (e.element !== element) {
+                    return true;
                 }
-            }
+                e.element.removeEventListener(event, e.handler, capture);
+                return false;
+            });
         }
     }
 
@@ -137,9 +173,9 @@ class EventManager {
 
         const delegateHandler = (e) => {
             const target = e.target || e.srcElement;
-            e.delegateTarget = closest(target, selector);
-            if (e.delegateTarget) {
-                handler.call(element, e);
+            e.delegateTarget = element;
+            if (matches(target, selector)) {
+                handler.call(target, e);
             }
         };
         delegateHandler.originalHandler = handler;
@@ -159,7 +195,8 @@ class EventManager {
      *
      * const nav = byId('nav');
      * const handler = (e) => {
-     *      //e.delegateTarget is the clicked element
+     *      //e.delegateTarget is the `nav` element
+     *      //`this` is the clicked element
      * }
      *
      * events.delegate(nav, 'a.nav-items' 'click', handler);
@@ -182,20 +219,26 @@ class EventManager {
             capture = true; // eslint-disable-line no-param-reassign
         }
 
-        const registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
-
-        if (Array.isArray(registryEl[event])) {
-
-            const delegateHandler = registryEl[event].filter((h) => (
-                h.originalHandler === handler && h.selector === selector)
-            )[0];
-
-            if (typeof delegateHandler === 'function') {
-                this.off(element, event, delegateHandler, capture);
-            }
-
+        if (!event && !handler) {
+            Object.keys(this.eventsRegistry).forEach((ev) => {
+                this.eventsRegistry[ev].forEach((h) => {
+                    if (h.element === element && h.handler.selector === selector) {
+                        this.off(element, ev, h.handler, capture);
+                    }
+                });
+            });
+            return;
         }
 
+        const registryEl = this.eventsRegistry[event] || (this.eventsRegistry[event] = {});
+
+        const filterFn = (h) => (!handler || h.originalHandler === handler) && (selector ? h.handler.selector === selector : h.handler.selector) && h.element === element;
+
+        registryEl.forEach((h) => {
+            if (filterFn(h) === true) {
+                this.off(h.element, event, h.handler, capture);
+            }
+        });
 
     }
 
