@@ -2,22 +2,18 @@ import classie from 'desandro-classie';
 
 import { parseString, arrayFrom, toCamelCase } from './utils';
 
-/* eslint-disable */
-if (!Element.prototype.matches) {
-    Element.prototype.matches =
+const matchesProto = Element.prototype.matches ||
         Element.prototype.matchesSelector ||
         Element.prototype.mozMatchesSelector ||
         Element.prototype.msMatchesSelector ||
         Element.prototype.oMatchesSelector ||
         Element.prototype.webkitMatchesSelector ||
-        function (s) {
-            var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-                i = matches.length;
-            while (--i >= 0 && matches.item(i) !== this) { }
+        function matchesSelector(s) {
+            const matches = (this.document || this.ownerDocument).querySelectorAll(s);
+            let i = matches.length;
+            while (--i >= 0 && matches.item(i) !== this) { } //eslint-disable-line
             return i > -1;
         };
-}
-/* eslint-enable */
 
 /**
  * # DOM Utility Functions
@@ -140,6 +136,8 @@ export const data = (element, attr) => {
     }, {}) : {};
 };
 
+
+
 /**
  * Converts passed-in Element or NodeList to an array.
  *
@@ -171,6 +169,33 @@ export const toArray = (element) => {
 };
 
 /**
+ * Returns `true` if the `element` would be selected by the specified `selector` string; otherwise, returns false.
+ *
+ * #### Example:
+ *
+ * ```
+ * import { matches, qs } from 'dom-utils';
+ *
+ * const el = qs('.parent .child');
+ *
+ * if (matches(el, '.parent')) {
+ *   // false
+ * }
+ *
+ * if (matches(el, '.parent .child')) {
+ *   // true
+ * }
+ * ```
+ *
+ * @param {Element} element
+ * @param {string} selector
+ * @return {boolean}
+ */
+export const matches = (element, selector) => matchesProto.call(element, selector);
+
+
+
+/**
  * Gets the ancestors of an element, optionally filtered by a selector.
  *
  * #### Example:
@@ -197,7 +222,7 @@ export const parents = (element, selector) => {
     let parent = element.parentElement;
 
     while (parent !== null && parent !== document) {
-        if (!hasSelector || parent.matches(selector)) {
+        if (!hasSelector || matches(parent, selector)) {
             elements.push(parent);
         }
         parent = parent.parentElement;
@@ -205,6 +230,8 @@ export const parents = (element, selector) => {
 
     return elements;
 };
+
+
 
 /**
  * Gets the first element that matches `selector` by testing the element itself and traversing up through its ancestors in the DOM tree.
@@ -227,11 +254,11 @@ export const parents = (element, selector) => {
  * @param {string} selector - A string containing a CSS selector expression to match
  * @returns {*}
  */
-export const closest = Element.prototype.closest || function closest(element, selector, checkSelf = true) {
-    let parent = checkSelf ? element : element.parentElement;
+export const closest = Element.prototype.closest || function closest(element, selector) {
+    let parent = element;
 
     while (parent && parent !== document) {
-        if (parent.matches(selector)) {
+        if (matches(parent, selector)) {
             return parent;
         }
         parent = parent.parentElement;
@@ -239,6 +266,8 @@ export const closest = Element.prototype.closest || function closest(element, se
 
     return undefined;
 };
+
+
 
 /**
  * Adds a new class to the element
@@ -303,6 +332,8 @@ export const {
     removeClass,
     hasClass
 } = classie;
+
+
 
 /**
  * If class exists then removes it, if not, then adds it.
