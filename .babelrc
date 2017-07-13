@@ -20,6 +20,15 @@
       "plugins": [
         ["add-module-exports"]
       ]
-    }
+	},
+	"test": {
+		"presets": [
+			["es2015", { "loose": true, "modules": false } ]
+		],
+		"plugins": [
+			["rewire-exports"],
+			["external-helpers"]
+		]
+	}
   }
 }

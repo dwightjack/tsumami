@@ -362,28 +362,7 @@ describe('`EventManager`', () => {
             handler = expect.createSpy();
         });
 
-        it('should remove all event handlers matching a selector', () => {
-            eventInst.delegate(list, 'li > a', 'click', handler);
-            eventInst.delegate(list, 'li', 'click', handler);
-            eventInst.delegate(list, 'li > a', 'focus', handler);
-
-            eventInst.undelegate(list, 'li > a');
-
-            //not called
-            simulate(list.querySelector('li > a'), 'click');
-            expect(handler.calls.length).toBe(0);
-
-            //not called either
-            // simulate(list.querySelector('li > a'), 'focus');
-            // expect(handler.calls.length).toBe(0);
-
-            // called!
-            // simulate(list.querySelector('li'), 'click');
-            // expect(handler.calls.length).toBe(1);
-
-        });
-
-        it('should remove all event handlers matching a selector (`.off()` proxy)', () => {
+        it('should proxy to `.off()`', () => {
             const spy = expect.spyOn(eventInst, 'off').andCallThrough();
 
             eventInst.delegate(list, 'li > a', 'click', handler);
@@ -410,5 +389,127 @@ describe('`EventManager`', () => {
 
         });
 
+        it('should remove all event handlers matching by `selector`', () => {
+            eventInst.delegate(list, 'li > a', 'click', handler);
+            eventInst.delegate(list, 'li', 'click', handler);
+            eventInst.delegate(list, 'li > a', 'focus', handler);
+
+            eventInst.undelegate(list, 'li > a');
+
+            //not called
+            simulate(list.querySelector('li > a'), 'click');
+            expect(handler.calls.length).toBe(0);
+            handler.reset();
+
+            //not called either
+            simulate(list.querySelector('li > a'), 'focus');
+            expect(handler.calls.length).toBe(0);
+            handler.reset();
+
+            // called!
+            simulate(list.querySelector('li'), 'click');
+            expect(handler.calls.length).toBe(1);
+            handler.reset();
+
+        });
+
+        it('should remove all event handlers matching by `event`', () => {
+            eventInst.delegate(list, 'li > a', 'click', handler);
+            eventInst.delegate(list, 'li', 'click', handler);
+            eventInst.delegate(list, 'li > a', 'focus', handler);
+
+            eventInst.undelegate(list, null, 'click');
+
+            //not called
+            simulate(list.querySelector('li > a'), 'click');
+            expect(handler.calls.length).toBe(0);
+            handler.reset();
+
+            //called!
+            simulate(list.querySelector('li > a'), 'focus');
+            expect(handler.calls.length).toBe(1);
+            handler.reset();
+
+            //not called
+            simulate(list.querySelector('li'), 'click');
+            expect(handler.calls.length).toBe(0);
+            handler.reset();
+
+        });
+
+        it('should remove all event handlers matching by `event` and `selector`', () => {
+            eventInst.delegate(list, 'li > a', 'click', handler);
+            eventInst.delegate(list, 'li', 'click', handler);
+            eventInst.delegate(list, 'li > a', 'focus', handler);
+
+            eventInst.undelegate(list, 'li > a', 'click');
+
+            //not called
+            simulate(list.querySelector('li > a'), 'click');
+            expect(handler.calls.length).toBe(0);
+            handler.reset();
+
+            //called!
+            simulate(list.querySelector('li > a'), 'focus');
+            expect(handler.calls.length).toBe(1);
+            handler.reset();
+
+            //called!
+            simulate(list.querySelector('li'), 'click');
+            expect(handler.calls.length).toBe(1);
+            handler.reset();
+
+        });
+
+        it('should remove all event handlers matching by `event`, `selector` and `handler`', () => {
+            const handler2 = expect.createSpy();
+
+            eventInst.delegate(list, 'li > a', 'click', handler);
+            eventInst.delegate(list, 'li > a', 'click', handler2);
+            eventInst.delegate(list, 'li', 'click', handler);
+            eventInst.delegate(list, 'li > a', 'focus', handler);
+
+            eventInst.undelegate(list, 'li > a', 'click', handler);
+
+            //called once
+            simulate(list.querySelector('li > a'), 'click');
+            expect(handler.calls.length).toBe(0);
+            expect(handler2.calls.length).toBe(1);
+            handler.reset();
+
+            //called!
+            simulate(list.querySelector('li > a'), 'focus');
+            expect(handler.calls.length).toBe(1);
+            handler.reset();
+
+            //called!
+            simulate(list.querySelector('li'), 'click');
+            expect(handler.calls.length).toBe(1);
+            handler.reset();
+
+        });
+
+    });
+
+    describe('`.destroy()`', () => {
+
+        it('should proxy to `.off()` without any argument', () => {
+
+            const eventInst = new EventManager();
+            const offSpy = expect.spyOn(eventInst, 'off');
+
+            eventInst.destroy();
+            expect(offSpy).toHaveBeenCalled();
+            expect(offSpy.calls[0].arguments.length).toBe(0);
+
+        });
+    });
+
+
+    describe('`events`', () => {
+
+        it('should be an instance of `EventManager`', () => {
+            expect(events).toBeA(EventManager);
+        });
     });
 });

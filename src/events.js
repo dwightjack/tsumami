@@ -208,9 +208,9 @@ class EventManager {
      *
      * @method
      * @param {Element} element - Target element
-     * @param {string} selector - A selector to filter the elements that trigger the event
-     * @param {string} event - Event to listen for
-     * @param {function} handler - Event handler
+     * @param {string} [selector] - A selector to filter the elements that trigger the event
+     * @param {string} [event] - Event to listen for
+     * @param {function} [handler] - Event handler
      * @param {boolean} [capture=true] - Whether to use event capturing
      * @returns {function}
      */
@@ -232,7 +232,7 @@ class EventManager {
 
         const registryEl = this.eventsRegistry[event] || (this.eventsRegistry[event] = {});
 
-        const filterFn = (h) => (!handler || h.originalHandler === handler) && (selector ? h.handler.selector === selector : h.handler.selector) && h.element === element;
+        const filterFn = (h) => (!handler || h.handler.originalHandler === handler) && (selector ? h.handler.selector === selector : h.handler.selector) && h.element === element;
 
         registryEl.forEach((h) => {
             if (filterFn(h) === true) {
