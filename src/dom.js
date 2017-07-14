@@ -287,6 +287,7 @@ export const closest = Element.prototype.closest || function closest(element, se
  * @param {Element} element - Target element
  * @param {string} className - Class to add
  */
+export const addClass = classie.add;
 
 /**
  * Removes a new class to the element
@@ -306,6 +307,7 @@ export const closest = Element.prototype.closest || function closest(element, se
  * @param {Element} element - Target element
  * @param {string} className - Class to remove
  */
+export const removeClass = classie.remove;
 
 /**
  * Checks if an element as a given class
@@ -327,13 +329,7 @@ export const closest = Element.prototype.closest || function closest(element, se
  * @param {Element} element - Target element
  * @param {string} className - Class to check
  */
-export const {
-    addClass,
-    removeClass,
-    hasClass
-} = classie;
-
-
+export const hasClass = classie.hasClass;
 
 /**
  * If class exists then removes it, if not, then adds it.

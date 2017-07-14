@@ -33,12 +33,12 @@ export default class Nodes {
     }
 
     /**
-     * Returns an array of elements
+     * Returns a shallow copy array of elements in the set
      *
      * @returns {Array}
      */
     toArray() {
-        return this.els;
+        return [...this.els];
     }
 
     /**
@@ -80,12 +80,11 @@ export default class Nodes {
      * @returns {*|Nodes}
      */
     attr(attr, value) {
-        const { els } = this;
         if (value !== undefined) {
-            this.forEach((el) => el.setAttribute(attr, result(value, el)));
+            this.forEach((el, i) => el.setAttribute(attr, result(value, el, i)));
             return this;
         }
-        const el = els.length > 0 ? els[0] : undefined;
+        const el = this.eq(0);
         if (!el) {
             return undefined;
         }
@@ -95,34 +94,40 @@ export default class Nodes {
     /**
      * Adds a class to the elements
      *
-     * @param {string} className - CSS class to add
+     * @param {string|function} className - CSS class to add or function returning the class string (signature: `(element, index) => {} `)
      * @returns {Nodes}
      */
     addClass(className) {
-        this.forEach((el) => (addClass(el, className)));
+        this.forEach((el, i) => addClass(el, result(className, el, i)));
         return this;
     }
 
     /**
      * Removes a class from the elements
      *
-     * @param {string} className - CSS class to add
+     * @param {string|function} className - CSS class to remove or function returning the class string (signature: `(element, index) => {} `)
      * @returns {Nodes}
      */
     removeClass(className) {
-        this.forEach((el) => (removeClass(el, className)));
+        this.forEach((el, i) => removeClass(el, result(className, el, i)));
         return this;
     }
 
     /**
      * Toggles a class on the elements
      *
-     * @param {string} className - CSS class to add
-     * @param {boolean} [toggle] - Force add or removal of the class
+     * @param {string|function} className - CSS class to toggle or function returning the class string (signature: `(element, index) => {} `)
+     * @param {boolean|function} [toggle] - Force add or removal of the class or function returning a boolean (signature: `(element, index) => {} `)
      * @returns {Nodes}
      */
     toggleClass(className, toggle) {
-        this.forEach((el) => (toggleClass(el, className, toggle)));
+        this.forEach((el, i) => (
+            toggleClass(
+                el,
+                result(className, el, i),
+                result(toggle, el, i))
+            )
+        );
         return this;
     }
 

@@ -26,7 +26,6 @@
 			["es2015", { "loose": true, "modules": false } ]
 		],
 		"plugins": [
-			["rewire-exports"],
 			["external-helpers"]
 		]
 	}
