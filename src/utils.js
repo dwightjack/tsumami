@@ -40,12 +40,12 @@ export const isNumeric = (obj) => {
 };
 
 /**
- * Parses a string and tries to convert it in a boolean or a number
+ * Accepts a string and tries to parse it as boolean, number or JSON
  *
  * @name parseString
  * @function
  * @private
- * @param {string} value - Value o parse
+ * @param {string} value - Value to parse
  * @returns {*}
  */
 export const parseString = (value) => {
@@ -61,7 +61,12 @@ export const parseString = (value) => {
     if (isNumeric(v)) {
         return parseFloat(v);
     }
-    return v;
+    try {
+        return JSON.parse(v);
+    } catch (e) {
+        return v;
+    }
+
 };
 
 
@@ -72,6 +77,6 @@ export const parseString = (value) => {
  * @function
  * @private
  * @param {*} - obj Object to convert to an array
- * @returns {srray}
+ * @returns {array}
  */
 export const arrayFrom = Array.from || ((obj) => Array.prototype.slice.call(obj));
