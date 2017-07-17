@@ -27,9 +27,9 @@ var CAMEL_CASE_REGEXP = /-([a-z])/ig;
  * @param {string} str - String to convert
  */
 var toCamelCase = function toCamelCase(str) {
-  return str.replace(CAMEL_CASE_REGEXP, function (match) {
-    return match[1].toUpperCase();
-  });
+    return str.replace(CAMEL_CASE_REGEXP, function (match) {
+        return match[1].toUpperCase();
+    });
 };
 
 /**
@@ -42,11 +42,11 @@ var toCamelCase = function toCamelCase(str) {
  * @return {*}
  */
 var result = function result(obj) {
-  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    args[_key - 1] = arguments[_key];
-  }
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+    }
 
-  return typeof obj === 'function' ? obj.apply(undefined, args) : obj;
+    return typeof obj === 'function' ? obj.apply(undefined, args) : obj;
 };
 
 /**
@@ -59,32 +59,36 @@ var result = function result(obj) {
  * @see https://api.jquery.com/jQuery.isNumeric/
  */
 var isNumeric = function isNumeric(obj) {
-  return (typeof obj === 'number' || typeof obj === 'string') && !isNaN(obj - parseFloat(obj));
+    return (typeof obj === 'number' || typeof obj === 'string') && !isNaN(obj - parseFloat(obj));
 };
 
 /**
- * Parses a string and tries to convert it in a boolean or a number
+ * Accepts a string and tries to parse it as boolean, number or JSON
  *
  * @name parseString
  * @function
  * @private
- * @param {string} value - Value o parse
+ * @param {string} value - Value to parse
  * @returns {*}
  */
 var parseString = function parseString(value) {
-  if (typeof value !== 'string') {
-    return undefined;
-  }
+    if (typeof value !== 'string') {
+        return undefined;
+    }
 
-  var v = value.trim();
+    var v = value.trim();
 
-  if (v === 'true' || v === 'false') {
-    return v === 'true';
-  }
-  if (isNumeric(v)) {
-    return parseFloat(v);
-  }
-  return v;
+    if (v === 'true' || v === 'false') {
+        return v === 'true';
+    }
+    if (isNumeric(v)) {
+        return parseFloat(v);
+    }
+    try {
+        return JSON.parse(v);
+    } catch (e) {
+        return v;
+    }
 };
 
 /**
@@ -94,10 +98,10 @@ var parseString = function parseString(value) {
  * @function
  * @private
  * @param {*} - obj Object to convert to an array
- * @returns {srray}
+ * @returns {array}
  */
 var arrayFrom = Array.from || function (obj) {
-  return Array.prototype.slice.call(obj);
+    return Array.prototype.slice.call(obj);
 };
 
 var utils = Object.freeze({
@@ -108,16 +112,12 @@ var utils = Object.freeze({
 	arrayFrom: arrayFrom
 });
 
-/* eslint-disable */
-if (!Element.prototype.matches) {
-    Element.prototype.matches = Element.prototype.matchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.msMatchesSelector || Element.prototype.oMatchesSelector || Element.prototype.webkitMatchesSelector || function (s) {
-        var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-            i = matches.length;
-        while (--i >= 0 && matches.item(i) !== this) {}
-        return i > -1;
-    };
-}
-/* eslint-enable */
+var matchesProto = Element.prototype.matches || Element.prototype.matchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.msMatchesSelector || Element.prototype.oMatchesSelector || Element.prototype.webkitMatchesSelector || function matchesSelector(s) {
+  var matches = (this.document || this.ownerDocument).querySelectorAll(s);
+  var i = matches.length;
+  while (--i >= 0 && matches.item(i) !== this) {} //eslint-disable-line
+  return i > -1;
+};
 
 /**
  * # DOM Utility Functions
@@ -142,7 +142,7 @@ if (!Element.prototype.matches) {
  *
  */
 var byId = function byId(id) {
-    return document.getElementById(id);
+  return document.getElementById(id);
 };
 
 /**
@@ -162,8 +162,8 @@ var byId = function byId(id) {
  * @return {Array}
  */
 var byClassName = function byClassName(className) {
-    var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
-    return arrayFrom(ctx.getElementsByClassName(className));
+  var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+  return arrayFrom(ctx.getElementsByClassName(className));
 };
 
 /**
@@ -185,8 +185,8 @@ var byClassName = function byClassName(className) {
  * @return {Element|null}
  */
 var qs = function qs(selector) {
-    var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
-    return ctx.querySelector(selector);
+  var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+  return ctx.querySelector(selector);
 };
 
 /**
@@ -208,8 +208,8 @@ var qs = function qs(selector) {
  * @return {Array}
  */
 var qsa = function qsa(selector) {
-    var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
-    return arrayFrom(ctx.querySelectorAll(selector));
+  var ctx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+  return arrayFrom(ctx.querySelectorAll(selector));
 };
 
 /**
@@ -236,22 +236,22 @@ var qsa = function qsa(selector) {
  * @return {*|null}
  */
 var data = function data(element, attr) {
-    if (attr) {
-        return element.hasAttribute('data-' + attr) ? parseString(element.getAttribute('data-' + attr)) : undefined;
-    }
-    var attributes = element.attributes;
-    return element.hasAttributes() ? arrayFrom(attributes).reduce(function (attrs, a, i) {
-        var _ref = attributes[i] || {},
-            _ref$name = _ref.name,
-            name = _ref$name === undefined ? '' : _ref$name,
-            value = _ref.value;
+  if (attr) {
+    return element.hasAttribute('data-' + attr) ? parseString(element.getAttribute('data-' + attr)) : undefined;
+  }
+  var attributes = element.attributes;
+  return element.hasAttributes() ? arrayFrom(attributes).reduce(function (attrs, a, i) {
+    var _ref = attributes[i] || {},
+        _ref$name = _ref.name,
+        name = _ref$name === undefined ? '' : _ref$name,
+        value = _ref.value;
 
-        if (name.indexOf('data-') === 0) {
-            var key = toCamelCase(name.replace(/^data-/, ''));
-            attrs[key] = parseString(value); //eslint-disable-line no-param-reassign
-        }
-        return attrs;
-    }, {}) : {};
+    if (name.indexOf('data-') === 0) {
+      var key = toCamelCase(name.replace(/^data-/, ''));
+      attrs[key] = parseString(value); //eslint-disable-line no-param-reassign
+    }
+    return attrs;
+  }, {}) : {};
 };
 
 /**
@@ -278,10 +278,37 @@ var data = function data(element, attr) {
  * @return {array}
  */
 var toArray = function toArray(element) {
-    if (Array.isArray(element)) {
-        return element;
-    }
-    return element instanceof NodeList ? arrayFrom(element) : [element];
+  if (Array.isArray(element)) {
+    return element;
+  }
+  return element instanceof NodeList ? arrayFrom(element) : [element];
+};
+
+/**
+ * Returns `true` if the `element` would be selected by the specified `selector` string; otherwise, returns false.
+ *
+ * #### Example:
+ *
+ * ```
+ * import { matches, qs } from 'dom-utils';
+ *
+ * const el = qs('.parent .child');
+ *
+ * if (matches(el, '.parent')) {
+ *   // false
+ * }
+ *
+ * if (matches(el, '.parent .child')) {
+ *   // true
+ * }
+ * ```
+ *
+ * @param {Element} element
+ * @param {string} selector
+ * @return {boolean}
+ */
+var matches = function matches(element, selector) {
+  return matchesProto.call(element, selector);
 };
 
 /**
@@ -306,18 +333,18 @@ var toArray = function toArray(element) {
  * @returns {Array}
  */
 var parents = function parents(element, selector) {
-    var elements = [];
-    var hasSelector = selector !== undefined;
-    var parent = element.parentElement;
+  var elements = [];
+  var hasSelector = selector !== undefined;
+  var parent = element.parentElement;
 
-    while (parent !== null && parent !== document) {
-        if (!hasSelector || parent.matches(selector)) {
-            elements.push(parent);
-        }
-        parent = parent.parentElement;
+  while (parent !== null && parent !== document) {
+    if (!hasSelector || matches(parent, selector)) {
+      elements.push(parent);
     }
+    parent = parent.parentElement;
+  }
 
-    return elements;
+  return elements;
 };
 
 /**
@@ -342,18 +369,16 @@ var parents = function parents(element, selector) {
  * @returns {*}
  */
 var closest = Element.prototype.closest || function closest(element, selector) {
-    var checkSelf = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  var parent = element;
 
-    var parent = checkSelf ? element : element.parentElement;
-
-    while (parent && parent !== document) {
-        if (parent.matches(selector)) {
-            return parent;
-        }
-        parent = parent.parentElement;
+  while (parent && parent !== document) {
+    if (matches(parent, selector)) {
+      return parent;
     }
+    parent = parent.parentElement;
+  }
 
-    return undefined;
+  return undefined;
 };
 
 /**
@@ -374,6 +399,7 @@ var closest = Element.prototype.closest || function closest(element, selector) {
  * @param {Element} element - Target element
  * @param {string} className - Class to add
  */
+var addClass = classie.add;
 
 /**
  * Removes a new class to the element
@@ -393,6 +419,7 @@ var closest = Element.prototype.closest || function closest(element, selector) {
  * @param {Element} element - Target element
  * @param {string} className - Class to remove
  */
+var removeClass = classie.remove;
 
 /**
  * Checks if an element as a given class
@@ -414,13 +441,42 @@ var closest = Element.prototype.closest || function closest(element, selector) {
  * @param {Element} element - Target element
  * @param {string} className - Class to check
  */
-var addClass = classie.addClass;
-var removeClass = classie.removeClass;
 var hasClass = classie.hasClass;
 
+/**
+ * If class exists then removes it, if not, then adds it.
+ * When the second argument is present and is true, add specified class value, if is false removes it.
+ *
+ * #### Example
+ *
+ * ```
+ * import { toggleClass, byId } from 'dom-utils';
+ *
+ * // html: <div id="content"></div>
+ * const content = byId('content');
+ *
+ * toggleClass(content, 'random-class')
+ * // html: <div id="content" class="random-class"></div>
+ *
+ * toggleClass(content, 'random-class')
+ * // html: <div id="content"></div>
+ *
+ * toggleClass(content, 'random-class')
+ * // html: <div id="content" class="random-class"></div>
+ *
+ * toggleClass(content, 'random-class', true)
+ * // html: <div id="content" class="random-class"></div>
+ * ```
+ *
+ * @name toggleClass
+ * @function
+ * @param {Element} element - Target element
+ * @param {string} className - Class to toggle
+ * @param {boolean} [toggle] - Force add or removal of the class
+ */
 var toggleClass = function toggleClass(element, className, toggle) {
-    var fn = toggle === undefined ? 'toggle' : toggle ? 'add' : 'remove'; //eslint-disable-line no-nested-ternary
-    classie[fn](element, className);
+  var fn = toggle === undefined ? 'toggle' : toggle ? 'add' : 'remove'; //eslint-disable-line no-nested-ternary
+  classie[fn](element, className);
 };
 
 var dom = Object.freeze({
@@ -430,6 +486,7 @@ var dom = Object.freeze({
 	qsa: qsa,
 	data: data,
 	toArray: toArray,
+	matches: matches,
 	parents: parents,
 	closest: closest,
 	addClass: addClass,
@@ -475,6 +532,14 @@ var EventManager = function () {
     function EventManager() {
         classCallCheck(this, EventManager);
 
+
+        /**
+         * Event Handler Registry
+         *
+         * @property
+         * @public
+         * @type {object}
+         */
         this.eventsRegistry = {};
     }
 
@@ -517,12 +582,8 @@ var EventManager = function () {
             return _this.off(element, event, handler, capture);
         };
 
-        var registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
-        if (Array.isArray(registryEl[event])) {
-            registryEl[event].push(handler);
-        } else {
-            registryEl[event] = [handler];
-        }
+        var registryEl = this.eventsRegistry[event] || (this.eventsRegistry[event] = []);
+        registryEl.push({ handler: handler, element: element, off: offHandler });
 
         return offHandler;
     };
@@ -544,35 +605,69 @@ var EventManager = function () {
      * //later on...
      *
      * events.off(btn, 'click', handler);
+     *
+     * //remove all handler for a given event
+     * events.off(btn, 'click');
+     *
+     * //remove all handler from an element
+     * events.off(btn);
      * ```
      *
      * @method
-     * @param {Element} element - Target element
-     * @param {string} event - Event to remove
-     * @param {function} handler - Event handler
+     * @param {Element} [element] - Target element
+     * @param {string} [event] - Event to remove
+     * @param {function} [handler] - Event handler
      * @param {boolean} [capture=false] - Whether to use event capturing
      */
 
 
     EventManager.prototype.off = function off(element, event, handler) {
+        var _this2 = this;
+
         var capture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
 
-        var registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
-        if (Array.isArray(registryEl[event])) {
-            if (handler !== undefined) {
-                var handlerIdx = registryEl[event].indexOf(handler);
-                if (handlerIdx !== -1) {
-                    registryEl.splice(handlerIdx, 1);
+        if (arguments.length === 0) {
+            //remove evenry handler
+            Object.keys(this.eventsRegistry).forEach(function (ev) {
+                var registryEl = _this2.eventsRegistry[ev];
+                var h = registryEl.pop();
+
+                while (h) {
+                    h.off();
+                    h = registryEl.pop();
                 }
-                element.removeEventListener(event, handler, capture);
-            } else {
-                var handleFn = registryEl[event].pop();
-                while (handleFn) {
-                    element.removeEventListener(event, handleFn, capture);
-                    handleFn = registryEl[event].pop();
+            });
+            this.eventsRegistry = {};
+            return;
+        }
+
+        if (!event && !handler) {
+            Object.keys(this.eventsRegistry).forEach(function (ev) {
+                _this2.off(element, ev, undefined, capture);
+            });
+            return;
+        }
+
+        var registryEl = this.eventsRegistry[event];
+
+        if (!event || !this.eventsRegistry[event]) {
+            return;
+        }
+
+        if (handler) {
+            this.eventsRegistry[event] = registryEl.filter(function (e) {
+                return e.element !== element || e.handler !== handler;
+            });
+            element.removeEventListener(event, handler, capture);
+        } else {
+            this.eventsRegistry[event] = registryEl.filter(function (e) {
+                if (e.element !== element) {
+                    return true;
                 }
-            }
+                e.element.removeEventListener(event, e.handler, capture);
+                return false;
+            });
         }
     };
 
@@ -617,9 +712,9 @@ var EventManager = function () {
 
         var delegateHandler = function delegateHandler(e) {
             var target = e.target || e.srcElement;
-            e.delegateTarget = closest(target, selector);
-            if (e.delegateTarget) {
-                handler.call(element, e);
+            e.delegateTarget = element;
+            if (matches(target, selector)) {
+                handler.call(target, e);
             }
         };
         delegateHandler.originalHandler = handler;
@@ -639,7 +734,8 @@ var EventManager = function () {
      *
      * const nav = byId('nav');
      * const handler = (e) => {
-     *      //e.delegateTarget is the clicked element
+     *      //e.delegateTarget is the `nav` element
+     *      //`this` is the clicked element
      * }
      *
      * events.delegate(nav, 'a.nav-items' 'click', handler);
@@ -651,33 +747,45 @@ var EventManager = function () {
      *
      * @method
      * @param {Element} element - Target element
-     * @param {string} selector - A selector to filter the elements that trigger the event
-     * @param {string} event - Event to listen for
-     * @param {function} handler - Event handler
+     * @param {string} [selector] - A selector to filter the elements that trigger the event
+     * @param {string} [event] - Event to listen for
+     * @param {function} [handler] - Event handler
      * @param {boolean} [capture=true] - Whether to use event capturing
      * @returns {function}
      */
 
 
     EventManager.prototype.undelegate = function undelegate(element, selector, event, handler) {
+        var _this3 = this;
+
         var capture = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
 
         if (forceCaptureEvents.indexOf(event) !== -1) {
             capture = true; // eslint-disable-line no-param-reassign
         }
 
-        var registryEl = this.eventsRegistry[element] || (this.eventsRegistry[element] = {});
-
-        if (Array.isArray(registryEl[event])) {
-
-            var delegateHandler = registryEl[event].filter(function (h) {
-                return h.originalHandler === handler && h.selector === selector;
-            })[0];
-
-            if (typeof delegateHandler === 'function') {
-                this.off(element, event, delegateHandler, capture);
-            }
+        if (!event && !handler) {
+            Object.keys(this.eventsRegistry).forEach(function (ev) {
+                _this3.eventsRegistry[ev].forEach(function (h) {
+                    if (h.element === element && h.handler.selector === selector) {
+                        _this3.off(element, ev, h.handler, capture);
+                    }
+                });
+            });
+            return;
         }
+
+        var registryEl = this.eventsRegistry[event] || (this.eventsRegistry[event] = {});
+
+        var filterFn = function filterFn(h) {
+            return (!handler || h.handler.originalHandler === handler) && (selector ? h.handler.selector === selector : h.handler.selector) && h.element === element;
+        };
+
+        registryEl.forEach(function (h) {
+            if (filterFn(h) === true) {
+                _this3.off(h.element, event, h.handler, capture);
+            }
+        });
     };
 
     EventManager.prototype.destroy = function destroy() {
@@ -737,12 +845,12 @@ var Nodes = function () {
 
 
     /**
-     * Returns an array of elements
+     * Returns a shallow copy array of elements in the set
      *
      * @returns {Array}
      */
     Nodes.prototype.toArray = function toArray$$1() {
-        return this.els;
+        return [].concat(this.els);
     };
 
     /**
@@ -792,15 +900,13 @@ var Nodes = function () {
 
 
     Nodes.prototype.attr = function attr(_attr, value) {
-        var els = this.els;
-
         if (value !== undefined) {
-            this.forEach(function (el) {
-                return el.setAttribute(_attr, result(value, el));
+            this.forEach(function (el, i) {
+                return el.setAttribute(_attr, result(value, el, i));
             });
             return this;
         }
-        var el = els.length > 0 ? els[0] : undefined;
+        var el = this.eq(0);
         if (!el) {
             return undefined;
         }
@@ -810,14 +916,14 @@ var Nodes = function () {
     /**
      * Adds a class to the elements
      *
-     * @param {string} className - CSS class to add
+     * @param {string|function} className - CSS class to add or function returning the class string (signature: `(element, index) => {} `)
      * @returns {Nodes}
      */
 
 
     Nodes.prototype.addClass = function addClass$$1(className) {
-        this.forEach(function (el) {
-            return addClass(el, className);
+        this.forEach(function (el, i) {
+            return addClass(el, result(className, el, i));
         });
         return this;
     };
@@ -825,14 +931,14 @@ var Nodes = function () {
     /**
      * Removes a class from the elements
      *
-     * @param {string} className - CSS class to add
+     * @param {string|function} className - CSS class to remove or function returning the class string (signature: `(element, index) => {} `)
      * @returns {Nodes}
      */
 
 
     Nodes.prototype.removeClass = function removeClass$$1(className) {
-        this.forEach(function (el) {
-            return removeClass(el, className);
+        this.forEach(function (el, i) {
+            return removeClass(el, result(className, el, i));
         });
         return this;
     };
@@ -840,15 +946,15 @@ var Nodes = function () {
     /**
      * Toggles a class on the elements
      *
-     * @param {string} className - CSS class to add
-     * @param {boolean} [toggle] - Force add or removal of the class
+     * @param {string|function} className - CSS class to toggle or function returning the class string (signature: `(element, index) => {} `)
+     * @param {boolean|function} [toggle] - Force add or removal of the class or function returning a boolean (signature: `(element, index) => {} `)
      * @returns {Nodes}
      */
 
 
     Nodes.prototype.toggleClass = function toggleClass$$1(className, toggle) {
-        this.forEach(function (el) {
-            return toggleClass(el, className, toggle);
+        this.forEach(function (el, i) {
+            return toggleClass(el, result(className, el, i), result(toggle, el, i));
         });
         return this;
     };
