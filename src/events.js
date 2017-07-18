@@ -3,8 +3,12 @@ import { matches } from './dom';
 const forceCaptureEvents = ['focus', 'blur'];
 
 /**
- * DOM events handler
+ * ## DOM events handler
  *
+ * Available as a constructor (`EventManager`) and as a singleton hub (`events`)
+ */
+
+/**
  * @name EventManager
  * @class
  */
@@ -28,9 +32,10 @@ class EventManager {
      * #### Example:
      *
      * ```
-     * import { byId } from 'dom-utils';
-     * import events from 'dom-utils/lib/events';
+     * import { byId } from 'tsumami';
+     * import { EventManager } from 'tsumami/lib/events';
      *
+     * const events = new EventManager();
      * const btn = byId('submit');
      *
      * const unbind = events.on(btn, 'click', (e) => { ... });
@@ -65,8 +70,10 @@ class EventManager {
      * #### Example:
      *
      * ```
-     * import { byId } from 'dom-utils';
-     * import events from 'dom-utils/lib/events';
+     * import { byId } from 'tsumami';
+     * import { EventManager } from 'tsumami/lib/events';
+     *
+     * const events = new EventManager();
      *
      * const btn = byId('submit');
      * const handler = (e) => { ... }
@@ -143,8 +150,10 @@ class EventManager {
      * #### Example:
      *
      * ```
-     * import { byId } from 'dom-utils';
-     * import events from 'dom-utils/lib/events';
+     * import { byId } from 'tsumami';
+     * import { EventManager } from 'tsumami/lib/events';
+     *
+     * const events = new EventManager();
      *
      * const nav = byId('nav');
      * const handler = (e) => {
@@ -190,8 +199,10 @@ class EventManager {
      * #### Example:
      *
      * ```
-     * import { byId } from 'dom-utils';
-     * import events from 'dom-utils/lib/events';
+     * import { byId } from 'tsumami';
+     * import { EventManager } from 'tsumami/lib/events';
+     *
+     * const events = new EventManager();
      *
      * const nav = byId('nav');
      * const handler = (e) => {
@@ -242,6 +253,23 @@ class EventManager {
 
     }
 
+    /**
+     * Removes all registered event handlers.
+     *
+     * #### Example:
+     *
+     * ```
+     * import { EventManager } from 'tsumami/lib/events';
+     *
+     * const events = new EventManager();
+     *
+     * //...
+     *
+     * events.off();
+     * ```
+     *
+     * @method
+     */
     destroy() {
         this.off();
     }
@@ -250,7 +278,15 @@ class EventManager {
 
 /**
  *
- * # DOM events handler
+ * # DOM events handler singleton
+ *
+ * #### Example:
+ *
+ * ```
+ * import { events } from 'tsumami/lib/events';
+ *
+ * events.on(...)
+ * ```
  *
  * @name events
  * @type {object}

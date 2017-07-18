@@ -41,11 +41,11 @@ See: https://api.jquery.com/jQuery.isNumeric/
 
 ## parseString(value)
 
-Parses a string and tries to convert it in a boolean or a number
+Accepts a string and tries to parse it as boolean, number or JSON
 
 #### Params:
 
-* **`string`** *value* - Value o parse
+* **`string`** *value* - Value to parse
 
 #### Return:
 
@@ -61,7 +61,7 @@ Cross-browser `Array.from` implementation
 
 #### Return:
 
-* **`srray`** 
+* **`array`** 
 
 <!-- End src/utils.js -->
 

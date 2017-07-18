@@ -26,7 +26,7 @@ const matchesProto = Element.prototype.matches ||
  * #### Example:
  *
  * ```
- * import { byId } from 'dom-utils';
+ * import { byId } from 'tsumami';
  *
  * const content = byId('main-content');
  * ```
@@ -46,7 +46,7 @@ export const byId = (id) => document.getElementById(id);
  * #### Example:
  *
  * ```
- * import { byClassName } from 'dom-utils';
+ * import { byClassName } from 'tsumami';
  *
  * const listItems = byClassName('list__items');
  * ```
@@ -64,7 +64,7 @@ export const byClassName = (className, ctx = document) => arrayFrom(ctx.getEleme
  * #### Example:
  *
  * ```
- * import { qs } from 'dom-utils';
+ * import { qs } from 'tsumami';
  *
  * const content = qs('#main-content');
  * ```
@@ -84,7 +84,7 @@ export const qs = (selector, ctx = document) => ctx.querySelector(selector);
  * #### Example:
  *
  * ```
- * import { qsa } from 'dom-utils';
+ * import { qsa } from 'tsumami';
  *
  * const listItems = qsa('.list .list-items');
  * ```
@@ -104,7 +104,7 @@ export const qsa = (selector, ctx = document) => arrayFrom(ctx.querySelectorAll(
  * #### Example:
  *
  * ```
- * import { byId, data } from 'dom-utils';
+ * import { byId, data } from 'tsumami';
  *
  * //html: <div id="content" data-name="my-content" data-idx="1" data-bool="false"></div>
  *
@@ -144,7 +144,7 @@ export const data = (element, attr) => {
  * #### Example:
  *
  * ```
- * import { toArray } from 'dom-utils';
+ * import { toArray } from 'tsumami';
  *
  * const content = document.getElementById('content');
  * const arrayLike = document.querySelectorAll('.elements');
@@ -174,7 +174,7 @@ export const toArray = (element) => {
  * #### Example:
  *
  * ```
- * import { matches, qs } from 'dom-utils';
+ * import { matches, qs } from 'tsumami';
  *
  * const el = qs('.parent .child');
  *
@@ -201,7 +201,7 @@ export const matches = (element, selector) => matchesProto.call(element, selecto
  * #### Example:
  *
  * ```
- * import { parents, qs } from 'dom-utils';
+ * import { parents, qs } from 'tsumami';
  *
  * const listItem = qs('li.list-item');
  *
@@ -241,7 +241,7 @@ export const parents = (element, selector) => {
  * #### Example:
  *
  * ```
- * import { closest, qs } from 'dom-utils';
+ * import { closest, qs } from 'tsumami';
  *
  * const listItem = qs('li.list-item');
  *
@@ -275,7 +275,7 @@ export const closest = Element.prototype.closest || function closest(element, se
  * #### Example
  *
  * ```
- * import { addClass, byId } from 'dom-utils';
+ * import { addClass, byId } from 'tsumami';
  *
  * const content = byId('content');
  *
@@ -295,7 +295,7 @@ export const addClass = classie.add;
  * #### Example
  *
  * ```
- * import { removeClass, byId } from 'dom-utils';
+ * import { removeClass, byId } from 'tsumami';
  *
  * const content = byId('content');
  *
@@ -315,7 +315,7 @@ export const removeClass = classie.remove;
  * #### Example
  *
  * ```
- * import { hasClass, byId } from 'dom-utils';
+ * import { hasClass, byId } from 'tsumami';
  *
  * const content = byId('content');
  *
@@ -338,7 +338,7 @@ export const hasClass = classie.hasClass;
  * #### Example
  *
  * ```
- * import { toggleClass, byId } from 'dom-utils';
+ * import { toggleClass, byId } from 'tsumami';
  *
  * // html: <div id="content"></div>
  * const content = byId('content');

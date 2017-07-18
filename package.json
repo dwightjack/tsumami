@@ -1,9 +1,8 @@
 {
-  "title": "DOM Utilities",
-  "name": "dom-utils",
+  "name": "tsumami",
   "description": "DOM Utilities",
   "version": "1.0.0",
-  "homepage": "https://github.com/dwightjack/dom-utils",
+  "homepage": "https://github.com/dwightjack/tsumami",
   "author": "Marco Solazzi",
   "license": "MIT",
   "main": "dist/dom.js",
@@ -17,9 +16,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dwightjack/dom-utils.git"
+    "url": "https://github.com/dwightjack/tsumami.git"
   },
-  "bugs": "https://github.com/dwightjack/dom-utils/issues",
+  "bugs": "https://github.com/dwightjack/tsumami/issues",
   "keywords": [
     "dom"
   ],

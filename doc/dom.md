@@ -11,7 +11,7 @@ Returns a reference to the element by its ID.
 #### Example:
 
 ```
-import { byId } from 'dom-utils';
+import { byId } from 'tsumami';
 
 const content = byId('main-content');
 ```
@@ -33,7 +33,7 @@ Returns an array of all child elements which have all of the given class names
 #### Example:
 
 ```
-import { byClassName } from 'dom-utils';
+import { byClassName } from 'tsumami';
 
 const listItems = byClassName('list__items');
 ```
@@ -54,7 +54,7 @@ Returns the first element within the document that matches the specified group o
 #### Example:
 
 ```
-import { qs } from 'dom-utils';
+import { qs } from 'tsumami';
 
 const content = qs('#main-content');
 ```
@@ -77,7 +77,7 @@ Returns a list of the elements within the document that match the specified grou
 #### Example:
 
 ```
-import { qsa } from 'dom-utils';
+import { qsa } from 'tsumami';
 
 const listItems = qsa('.list .list-items');
 ```
@@ -93,14 +93,14 @@ See: https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
 
 * **`Array`** 
 
-## data(element, attr)
+## data(element, [attr])
 
 Returns a parsed data attribute from the passed-in node. If not found returns `null`
 
 #### Example:
 
 ```
-import { byId, data } from 'dom-utils';
+import { byId, data } from 'tsumami';
 
 //html: <div id="content" data-name="my-content" data-idx="1" data-bool="false"></div>
 
@@ -114,7 +114,7 @@ const bool = attr(content, 'bool'); // false
 #### Params:
 
 * **`Element`** *element* - DOM Element
-* **`string`** *attr* - Data attribute to retrieve (without the `data-`)
+* **`string`** *[attr]* - Data attribute to retrieve (without the `data-`). If empty will return an object with every `data-` attribute as key.
 
 #### Return:
 
@@ -127,7 +127,7 @@ Converts passed-in Element or NodeList to an array.
 #### Example:
 
 ```
-import { toArray } from 'dom-utils';
+import { toArray } from 'tsumami';
 
 const content = document.getElementById('content');
 const arrayLike = document.querySelectorAll('.elements');
@@ -147,6 +147,33 @@ const contentArray = toArray(content);
 
 * **`array`** 
 
+Returns `true` if the `element` would be selected by the specified `selector` string; otherwise, returns false.
+
+#### Example:
+
+```
+import { matches, qs } from 'tsumami';
+
+const el = qs('.parent .child');
+
+if (matches(el, '.parent')) {
+  // false
+}
+
+if (matches(el, '.parent .child')) {
+  // true
+}
+```
+
+#### Params:
+
+* **`Element`** *element* 
+* **`string`** *selector* 
+
+#### Return:
+
+* **`boolean`** 
+
 ## parents(element, [selector])
 
 Gets the ancestors of an element, optionally filtered by a selector.
@@ -154,7 +181,7 @@ Gets the ancestors of an element, optionally filtered by a selector.
 #### Example:
 
 ```
-import { parents, qs } from 'dom-utils';
+import { parents, qs } from 'tsumami';
 
 const listItem = qs('li.list-item');
 
@@ -172,14 +199,16 @@ const parentLists = parents(listItem, 'ul');
 
 * **`Array`** 
 
-## closest(element, selector, [checkSelf=true])
+## closest(element, selector)
 
 Gets the first element that matches `selector` by testing the element itself and traversing up through its ancestors in the DOM tree.
+
+Will use native [`Element.prototype.closest`](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest) if available.
 
 #### Example:
 
 ```
-import { closest, qs } from 'dom-utils';
+import { closest, qs } from 'tsumami';
 
 const listItem = qs('li.list-item');
 
@@ -190,7 +219,6 @@ const list = closest(listItem, 'ul');
 
 * **`Element`** *element* - Source element
 * **`string`** *selector* - A string containing a CSS selector expression to match
-* **`boolean`** *[checkSelf=true]* - try to match the selector on `element` too.
 
 #### Return:
 
@@ -203,7 +231,7 @@ Adds a new class to the element
 #### Example
 
 ```
-import { addClass, byId } from 'dom-utils';
+import { addClass, byId } from 'tsumami';
 
 const content = byId('content');
 
@@ -222,7 +250,7 @@ Removes a new class to the element
 #### Example
 
 ```
-import { removeClass, byId } from 'dom-utils';
+import { removeClass, byId } from 'tsumami';
 
 const content = byId('content');
 
@@ -241,7 +269,7 @@ Checks if an element as a given class
 #### Example
 
 ```
-import { hasClass, byId } from 'dom-utils';
+import { hasClass, byId } from 'tsumami';
 
 const content = byId('content');
 
@@ -263,7 +291,7 @@ When the second argument is present and is true, add specified class value, if i
 #### Example
 
 ```
-import { toggleClass, byId } from 'dom-utils';
+import { toggleClass, byId } from 'tsumami';
 
 // html: <div id="content"></div>
 const content = byId('content');
