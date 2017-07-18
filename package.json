@@ -5,11 +5,11 @@
   "homepage": "https://github.com/dwightjack/tsumami",
   "author": "Marco Solazzi",
   "license": "MIT",
-  "main": "dist/dom.js",
+  "main": "lib/dom.js",
   "jsnext:main": "es/dom.js",
   "module": "es/dom.js",
   "files": [
-    "dist",
+    "lib",
     "es",
     "src",
     "umd"
@@ -26,7 +26,7 @@
     "prepublishOnly": "npm run build",
     "build": "npm run test && npm run lint && npm run docs && npm run build:cjs && npm run build:es && cross-env NODE_ENV=production npm run build:umd",
     "build:es": "rimraf es && cross-env BABEL_ENV=es babel ./src -d es --ignore umd.js",
-    "build:cjs": "rimraf dist && cross-env BABEL_ENV=cjs babel ./src -d dist --ignore umd.js",
+    "build:cjs": "rimraf lib && cross-env BABEL_ENV=cjs babel ./src -d lib --ignore umd.js",
     "build:umd": "rimraf umd && cross-env BABEL_ENV=rollup rollup -c rollup.config.js",
     "lint": "eslint -c ./src/.eslintrc.json src",
     "docs": "rimraf doc && node ./scripts/docs.js",
