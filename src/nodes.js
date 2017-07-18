@@ -1,5 +1,5 @@
 import { qsa, toArray, addClass, removeClass, toggleClass } from './dom';
-import { toCamelCase } from './utils';
+import { result } from './utils';
 
 /**
  * Chainable *jQuery-like* list of nodes
@@ -10,6 +10,10 @@ import { toCamelCase } from './utils';
  * @param {Element|Node} [ctx=document] - Root element. Defaults to `document`
  */
 export default class Nodes {
+
+    static toNodes(...args) {
+        return new Nodes(...args);
+    }
 
     /**
      * Constructor
@@ -29,12 +33,12 @@ export default class Nodes {
     }
 
     /**
-     * Returns an array of elements
+     * Returns a shallow copy array of elements in the set
      *
      * @returns {Array}
      */
     toArray() {
-        return this.els;
+        return [...this.els];
     }
 
     /**
@@ -45,6 +49,17 @@ export default class Nodes {
      */
     eq(index) {
         return this.els[index];
+    }
+
+    /**
+     * Iterates `iterator` function on every element in the set
+     *
+     * @param {function} iterator - Iterator function
+     * @returns {Element|undefined}
+     */
+    forEach(iterator) {
+        this.els.forEach(iterator);
+        return this;
     }
 
     /**
@@ -65,74 +80,55 @@ export default class Nodes {
      * @returns {*|Nodes}
      */
     attr(attr, value) {
-        const {els} = this;
-        const attrStr = toCamelCase(attr);
         if (value !== undefined) {
-            const iteratorFn = typeof value === 'function' ? value : (el) => (el[attrStr] = value);
-            this.els.forEach(iteratorFn);
+            this.forEach((el, i) => el.setAttribute(attr, result(value, el, i)));
             return this;
         }
-        const el = els.length > 0 ? els[0] : undefined;
-        const hook = NodeList.attrHooks[attrStr];
+        const el = this.eq(0);
         if (!el) {
             return undefined;
         }
-        return hook ? hook(el) : el[attrStr];
+        return el.getAttribute(attr);
     }
 
     /**
      * Adds a class to the elements
      *
-     * @param {string} className - CSS class to add
+     * @param {string|function} className - CSS class to add or function returning the class string (signature: `(element, index) => {} `)
      * @returns {Nodes}
      */
     addClass(className) {
-        this.els.forEach((el) => (addClass(el, className)));
+        this.forEach((el, i) => addClass(el, result(className, el, i)));
         return this;
     }
 
     /**
      * Removes a class from the elements
      *
-     * @param {string} className - CSS class to add
+     * @param {string|function} className - CSS class to remove or function returning the class string (signature: `(element, index) => {} `)
      * @returns {Nodes}
      */
     removeClass(className) {
-        this.els.forEach((el) => (removeClass(el, className)));
+        this.forEach((el, i) => removeClass(el, result(className, el, i)));
         return this;
     }
 
     /**
      * Toggles a class on the elements
      *
-     * @param {string} className - CSS class to add
-     * @param {boolean} [toggle] - Force add or removal of the class
+     * @param {string|function} className - CSS class to toggle or function returning the class string (signature: `(element, index) => {} `)
+     * @param {boolean|function} [toggle] - Force add or removal of the class or function returning a boolean (signature: `(element, index) => {} `)
      * @returns {Nodes}
      */
     toggleClass(className, toggle) {
-        this.els.forEach((el) => (toggleClass(el, className, toggle)));
+        this.forEach((el, i) => (
+            toggleClass(
+                el,
+                result(className, el, i),
+                result(toggle, el, i))
+            )
+        );
         return this;
     }
+
 }
-
-/**
- * HTML to DOM attrubute translation hooks
- *
- * @static
- * @type {object}
- */
-Nodes.attrHooks = {
-    'for': (el) => el.htmlFor,
-    'class': (el) => el.className
-};
-
-/**
- * Returns a new `Nodes` instance
- *
- * @param elements
- * @param ctx
- */
-export const toNodes = (elements, ctx) => new Nodes(elements, ctx);
-
-Nodes.toNodes = toNodes;
-

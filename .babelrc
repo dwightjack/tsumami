@@ -1,8 +1,33 @@
 {
-    "presets": [
-        "es2015-loose"
-    ],
-    "plugins" : [
-    	["transform-runtime", {"polyfill": false, "regenerator": false }]
-    ]
+  "env": {
+    "es": {
+      "presets": [
+        ["es2015", {"loose": true, "modules": false}]
+      ]
+    },
+    "rollup": {
+      "presets": [
+        ["es2015", {"loose": true, "modules": false}]
+      ],
+      "plugins": [
+        ["external-helpers"]
+      ]
+    },
+	"cjs": {
+      "presets": [
+        ["es2015", {"loose": true, "modules": "commonjs"}]
+      ],
+      "plugins": [
+        ["add-module-exports"]
+      ]
+	},
+	"test": {
+		"presets": [
+			["es2015", { "loose": true, "modules": false } ]
+		],
+		"plugins": [
+			["external-helpers"]
+		]
+	}
+  }
 }

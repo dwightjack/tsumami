@@ -1,13 +1,23 @@
 import classie from 'desandro-classie';
 
-import { parseString } from './utils';
+import { parseString, arrayFrom, toCamelCase } from './utils';
 
-
+const matchesProto = Element.prototype.matches ||
+        Element.prototype.matchesSelector ||
+        Element.prototype.mozMatchesSelector ||
+        Element.prototype.msMatchesSelector ||
+        Element.prototype.oMatchesSelector ||
+        Element.prototype.webkitMatchesSelector ||
+        function matchesSelector(s) {
+            const matches = (this.document || this.ownerDocument).querySelectorAll(s);
+            let i = matches.length;
+            while (--i >= 0 && matches.item(i) !== this) { } //eslint-disable-line
+            return i > -1;
+        };
 
 /**
  * # DOM Utility Functions
  */
-
 
 
 /**
@@ -16,7 +26,7 @@ import { parseString } from './utils';
  * #### Example:
  *
  * ```
- * import { byId } from 'dom-utils';
+ * import { byId } from 'tsumami';
  *
  * const content = byId('main-content');
  * ```
@@ -36,7 +46,7 @@ export const byId = (id) => document.getElementById(id);
  * #### Example:
  *
  * ```
- * import { byClassName } from 'dom-utils';
+ * import { byClassName } from 'tsumami';
  *
  * const listItems = byClassName('list__items');
  * ```
@@ -46,7 +56,7 @@ export const byId = (id) => document.getElementById(id);
  * @param {Element|Document} [ctx=document] - Root element. `document` by default
  * @return {Array}
  */
-export const byClassName = (className, ctx = document) => Array.toArray(ctx.getElementsByClassName(className));
+export const byClassName = (className, ctx = document) => arrayFrom(ctx.getElementsByClassName(className));
 
 /**
  * Returns the first element within the document that matches the specified group of selectors
@@ -54,7 +64,7 @@ export const byClassName = (className, ctx = document) => Array.toArray(ctx.getE
  * #### Example:
  *
  * ```
- * import { qs } from 'dom-utils';
+ * import { qs } from 'tsumami';
  *
  * const content = qs('#main-content');
  * ```
@@ -74,7 +84,7 @@ export const qs = (selector, ctx = document) => ctx.querySelector(selector);
  * #### Example:
  *
  * ```
- * import { qsa } from 'dom-utils';
+ * import { qsa } from 'tsumami';
  *
  * const listItems = qsa('.list .list-items');
  * ```
@@ -86,7 +96,7 @@ export const qs = (selector, ctx = document) => ctx.querySelector(selector);
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
  * @return {Array}
  */
-export const qsa = (selector, ctx = document) => Array.from(ctx.querySelectorAll(selector));
+export const qsa = (selector, ctx = document) => arrayFrom(ctx.querySelectorAll(selector));
 
 /**
  * Returns a parsed data attribute from the passed-in node. If not found returns `null`
@@ -94,7 +104,7 @@ export const qsa = (selector, ctx = document) => Array.from(ctx.querySelectorAll
  * #### Example:
  *
  * ```
- * import { byId, data } from 'dom-utils';
+ * import { byId, data } from 'tsumami';
  *
  * //html: <div id="content" data-name="my-content" data-idx="1" data-bool="false"></div>
  *
@@ -108,10 +118,25 @@ export const qsa = (selector, ctx = document) => Array.from(ctx.querySelectorAll
  * @name data
  * @function
  * @param {Element} element - DOM Element
- * @param {string} attr - Data attribute to retrieve (without the `data-`)
+ * @param {string} [attr] - Data attribute to retrieve (without the `data-`). If empty will return an object with every `data-` attribute as key.
  * @return {*|null}
  */
-export const data = (element, attr) => element.hasAttribute('data-' + attr) ? parseString(element.getAttribute('data-' + attr)) : undefined;
+export const data = (element, attr) => {
+    if (attr) {
+        return element.hasAttribute('data-' + attr) ? parseString(element.getAttribute('data-' + attr)) : undefined;
+    }
+    const attributes = element.attributes;
+    return element.hasAttributes() ? arrayFrom(attributes).reduce((attrs, a, i) => {
+        const { name = '', value } = attributes[i] || {};
+        if (name.indexOf('data-') === 0) {
+            const key = toCamelCase(name.replace(/^data-/, ''));
+            attrs[key] = parseString(value); //eslint-disable-line no-param-reassign
+        }
+        return attrs;
+    }, {}) : {};
+};
+
+
 
 /**
  * Converts passed-in Element or NodeList to an array.
@@ -119,7 +144,7 @@ export const data = (element, attr) => element.hasAttribute('data-' + attr) ? pa
  * #### Example:
  *
  * ```
- * import { toArray } from 'dom-utils';
+ * import { toArray } from 'tsumami';
  *
  * const content = document.getElementById('content');
  * const arrayLike = document.querySelectorAll('.elements');
@@ -140,8 +165,35 @@ export const toArray = (element) => {
     if (Array.isArray(element)) {
         return element;
     }
-    return (element instanceof NodeList) ? Array.from(element) : [element];
+    return (element instanceof NodeList) ? arrayFrom(element) : [element];
 };
+
+/**
+ * Returns `true` if the `element` would be selected by the specified `selector` string; otherwise, returns false.
+ *
+ * #### Example:
+ *
+ * ```
+ * import { matches, qs } from 'tsumami';
+ *
+ * const el = qs('.parent .child');
+ *
+ * if (matches(el, '.parent')) {
+ *   // false
+ * }
+ *
+ * if (matches(el, '.parent .child')) {
+ *   // true
+ * }
+ * ```
+ *
+ * @param {Element} element
+ * @param {string} selector
+ * @return {boolean}
+ */
+export const matches = (element, selector) => matchesProto.call(element, selector);
+
+
 
 /**
  * Gets the ancestors of an element, optionally filtered by a selector.
@@ -149,7 +201,7 @@ export const toArray = (element) => {
  * #### Example:
  *
  * ```
- * import { parents, qs } from 'dom-utils';
+ * import { parents, qs } from 'tsumami';
  *
  * const listItem = qs('li.list-item');
  *
@@ -169,24 +221,27 @@ export const parents = (element, selector) => {
     const hasSelector = selector !== undefined;
     let parent = element.parentElement;
 
-    while (parent !== null &&  parent !== document) {
-        if (!hasSelector || parent.matches(selector)) {
+    while (parent !== null && parent !== document) {
+        if (!hasSelector || matches(parent, selector)) {
             elements.push(parent);
         }
-
         parent = parent.parentElement;
     }
 
     return elements;
 };
 
+
+
 /**
  * Gets the first element that matches `selector` by testing the element itself and traversing up through its ancestors in the DOM tree.
+ *
+ * Will use native [`Element.prototype.closest`](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest) if available.
  *
  * #### Example:
  *
  * ```
- * import { closest, qs } from 'dom-utils';
+ * import { closest, qs } from 'tsumami';
  *
  * const listItem = qs('li.list-item');
  *
@@ -197,14 +252,13 @@ export const parents = (element, selector) => {
  * @function
  * @param {Element} element - Source element
  * @param {string} selector - A string containing a CSS selector expression to match
- * @param {boolean} [checkSelf=true] - try to match the selector on `element` too.
  * @returns {*}
  */
-export const closest = (element, selector, checkSelf = true) => {
-    let parent = checkSelf ? element : element.parentElement;
+export const closest = Element.prototype.closest || function closest(element, selector) {
+    let parent = element;
 
     while (parent && parent !== document) {
-        if (parent.matches(selector)) {
+        if (matches(parent, selector)) {
             return parent;
         }
         parent = parent.parentElement;
@@ -213,13 +267,15 @@ export const closest = (element, selector, checkSelf = true) => {
     return undefined;
 };
 
+
+
 /**
  * Adds a new class to the element
  *
  * #### Example
  *
  * ```
- * import { addClass, byId } from 'dom-utils';
+ * import { addClass, byId } from 'tsumami';
  *
  * const content = byId('content');
  *
@@ -231,6 +287,7 @@ export const closest = (element, selector, checkSelf = true) => {
  * @param {Element} element - Target element
  * @param {string} className - Class to add
  */
+export const addClass = classie.add;
 
 /**
  * Removes a new class to the element
@@ -238,7 +295,7 @@ export const closest = (element, selector, checkSelf = true) => {
  * #### Example
  *
  * ```
- * import { removeClass, byId } from 'dom-utils';
+ * import { removeClass, byId } from 'tsumami';
  *
  * const content = byId('content');
  *
@@ -250,6 +307,7 @@ export const closest = (element, selector, checkSelf = true) => {
  * @param {Element} element - Target element
  * @param {string} className - Class to remove
  */
+export const removeClass = classie.remove;
 
 /**
  * Checks if an element as a given class
@@ -257,7 +315,7 @@ export const closest = (element, selector, checkSelf = true) => {
  * #### Example
  *
  * ```
- * import { hasClass, byId } from 'dom-utils';
+ * import { hasClass, byId } from 'tsumami';
  *
  * const content = byId('content');
  *
@@ -271,11 +329,7 @@ export const closest = (element, selector, checkSelf = true) => {
  * @param {Element} element - Target element
  * @param {string} className - Class to check
  */
-export const {
-    addClass,
-    removeClass,
-    hasClass
-} = classie;
+export const hasClass = classie.hasClass;
 
 /**
  * If class exists then removes it, if not, then adds it.
@@ -284,7 +338,7 @@ export const {
  * #### Example
  *
  * ```
- * import { toggleClass, byId } from 'dom-utils';
+ * import { toggleClass, byId } from 'tsumami';
  *
  * // html: <div id="content"></div>
  * const content = byId('content');
@@ -312,6 +366,3 @@ export const toggleClass = (element, className, toggle) => {
     const fn = toggle === undefined ? 'toggle' : (toggle ? 'add' : 'remove'); //eslint-disable-line no-nested-ternary
     classie[fn](element, className);
 };
-
-
-

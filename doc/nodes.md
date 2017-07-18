@@ -25,7 +25,7 @@ The number of elements in the list
 
 ## toArray()
 
-Returns an array of elements
+Returns a shallow copy array of elements in the set
 
 #### Return:
 
@@ -38,6 +38,18 @@ Returns an element at the given index or `undefined`
 #### Params:
 
 * **`number`** *index* - Element index
+
+#### Return:
+
+* **`Element`** 
+
+## forEach(iterator)
+
+Iterates `iterator` function on every element in the set
+
+#### Params:
+
+* **`function`** *iterator* - Iterator function
 
 #### Return:
 
@@ -74,7 +86,7 @@ Adds a class to the elements
 
 #### Params:
 
-* **`string`** *className* - CSS class to add
+* **`string|function`** *className* - CSS class to add or function returning the class string (signature: `(element, index) => {} `)
 
 #### Return:
 
@@ -86,7 +98,7 @@ Removes a class from the elements
 
 #### Params:
 
-* **`string`** *className* - CSS class to add
+* **`string|function`** *className* - CSS class to remove or function returning the class string (signature: `(element, index) => {} `)
 
 #### Return:
 
@@ -98,23 +110,12 @@ Toggles a class on the elements
 
 #### Params:
 
-* **`string`** *className* - CSS class to add
-* **`boolean`** *[toggle]* - Force add or removal of the class
+* **`string|function`** *className* - CSS class to toggle or function returning the class string (signature: `(element, index) => {} `)
+* **`boolean|function`** *[toggle]* - Force add or removal of the class or function returning a boolean (signature: `(element, index) => {} `)
 
 #### Return:
 
 * **`Nodes`** 
-
-## attrHooks 
-
-HTML to DOM attrubute translation hooks
-
-Returns a new `Nodes` instance
-
-#### Params:
-
-* *elements* 
-* *ctx* 
 
 <!-- End src/nodes.js -->
 
