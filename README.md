@@ -16,8 +16,9 @@ yarn add tsumami
 
 ### CDN delivered `<script>`
 
-add the following script tag before your code
+add the following script tags before your code
 ```html
+<script src="https://unpkg.com/desandro-classie"></script> <!-- hard dependency -->
 <script src="https://unpkg.com/tsumami"></script>
 ```
 
