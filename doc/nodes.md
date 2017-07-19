@@ -9,7 +9,7 @@ Chainable *jQuery-like* list of nodes
 #### Example:
 
 ```
-import { Nodes } from 'tsumami/lib/nodes';
+import Nodes from 'tsumami/lib/nodes';
 
 const els = new Nodes('.my-class');
 ```
@@ -29,7 +29,7 @@ The number of elements in the list
 
 #### Example
 ```
-import { Nodes } from 'tsumami/lib/nodes';
+import Nodes from 'tsumami/lib/nodes';
 
 const els = new Nodes('.my-class');
 
@@ -46,7 +46,7 @@ Returns a shallow copy array of elements in the set
 
 #### Example
 ```
-import { Nodes } from 'tsumami/lib/nodes';
+import Nodes from 'tsumami/lib/nodes';
 
 const els = new Nodes('.my-class');
 
@@ -63,7 +63,7 @@ Returns an element at the given index or `undefined`
 
 #### Example
 ```
-import { Nodes } from 'tsumami/lib/nodes';
+import Nodes from 'tsumami/lib/nodes';
 
 const els = new Nodes('.my-class');
 
@@ -84,7 +84,7 @@ Iterates `iterator` function on every element in the set
 
 #### Example
 ```
-import { Nodes } from 'tsumami/lib/nodes';
+import Nodes from 'tsumami/lib/nodes';
 import { addClass } from 'tsumami';
 
 const els = new Nodes('.my-class');
@@ -106,7 +106,7 @@ Returns the index of an element in the current list or `-1` if not found
 
 #### Example
 ```
-import { Nodes } from 'tsumami/lib/nodes';
+import Nodes from 'tsumami/lib/nodes';
 import { qs } from 'tsumami';
 
 const els = new Nodes('.my-class');
@@ -130,7 +130,7 @@ Gets or sets and attribute on the set of elements
 
 #### Example
 ```
-import { Nodes } from 'tsumami/lib/nodes';
+import Nodes from 'tsumami/lib/nodes';
 
 const els = new Nodes('.my-class');
 
@@ -159,7 +159,7 @@ Adds a class to the elements
 
 #### Example
 ```
-import { Nodes } from 'tsumami/lib/nodes';
+import Nodes from 'tsumami/lib/nodes';
 
 const els = new Nodes('.my-class');
 
@@ -184,7 +184,7 @@ Removes a class from the elements
 
 #### Example
 ```
-import { Nodes } from 'tsumami/lib/nodes';
+import Nodes from 'tsumami/lib/nodes';
 
 const els = new Nodes('.my-class');
 
@@ -209,7 +209,7 @@ Toggles a class on the elements
 
 #### Example
 ```
-import { Nodes } from 'tsumami/lib/nodes';
+import Nodes from 'tsumami/lib/nodes';
 
 const els = new Nodes('.my-class');
 
