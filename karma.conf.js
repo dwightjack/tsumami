@@ -3,96 +3,94 @@
 
 const production = process.env.PRODUCTION === 'true';
 
-module.exports = (config) => {
-    config.set({
+const baseConfig = {
 
-        // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '',
-
-
-        // frameworks to use
-        // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['mocha'],
+    // base path that will be used to resolve all patterns (eg. files, exclude)
+    basePath: '',
 
 
-        // list of files / patterns to load in the browser
-        files: [
-            { pattern: 'src/*.js', included: false },
-            { pattern: 'test/utils.js', included: false },
-            'test/**/*.spec.js',
-            'test/fixtures/*.html'
+    // frameworks to use
+    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+    frameworks: ['mocha'],
+
+
+    // list of files / patterns to load in the browser
+    files: [
+        { pattern: 'src/*.js', included: false },
+        { pattern: 'test/utils.js', included: false },
+        'test/**/*.spec.js',
+        'test/fixtures/*.html'
+    ],
+
+
+    // list of files to exclude
+    exclude: [
+    ],
+
+
+    // preprocess matching files before serving them to the browser
+    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+    preprocessors: {
+        'src/*.js': ['rollup'],
+        'test/**/*.js': ['rollup'],
+        'test/fixtures/*.html': ['html2js']
+    },
+
+    html2JsPreprocessor: {
+        stripPrefix: 'test/fixtures/'
+    },
+
+    rollupPreprocessor: {
+        plugins: [
+            require('rollup-plugin-node-resolve')(), //eslint-disable-line
+            require('rollup-plugin-commonjs')(), //eslint-disable-line
+            require('rollup-plugin-babel')({ //eslint-disable-line
+                exclude: 'node_modules/**'
+            }),
+            require('rollup-plugin-replace')({ //eslint-disable-line
+                'process.env.NODE_DEBUG': !production
+            }),
+            require('rollup-plugin-stub')(), //eslint-disable-line
+            require('rollup-plugin-node-globals')() //eslint-disable-line
         ],
+        format: 'iife',               // Helps prevent naming collisions.
+        moduleName: 'domUtils', // Required for 'iife' format.
+        sourceMap: 'inline'          // Sensible for testing.
+    },
+
+    // test results reporter to use
+    // possible values: 'dots', 'progress'
+    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+    reporters: ['progress'],
 
 
-        // list of files to exclude
-        exclude: [
-        ],
+    // web server port
+    port: 9876,
 
 
-        // preprocess matching files before serving them to the browser
-        // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-        preprocessors: {
-            'src/*.js': ['rollup'],
-            'test/**/*.js': ['rollup'],
-            'test/fixtures/*.html': ['html2js']
-        },
+    // enable / disable colors in the output (reporters and logs)
+    colors: true,
 
-        html2JsPreprocessor: {
-            stripPrefix: 'test/fixtures/'
-        },
+    // enable / disable watching file and executing tests whenever any file changes
+    autoWatch: false,
 
-        rollupPreprocessor: {
-            plugins: [
-                require('rollup-plugin-node-resolve')(), //eslint-disable-line
-                require('rollup-plugin-commonjs')(), //eslint-disable-line
-                require('rollup-plugin-babel')({ //eslint-disable-line
-                    exclude: 'node_modules/**'
-                }),
-                require('rollup-plugin-replace')({ //eslint-disable-line
-                    'process.env.NODE_DEBUG': !production
-                }),
-                require('rollup-plugin-stub')(), //eslint-disable-line
-                require('rollup-plugin-node-globals')() //eslint-disable-line
-            ],
-            format: 'iife',               // Helps prevent naming collisions.
-            moduleName: 'domUtils', // Required for 'iife' format.
-            sourceMap: 'inline'          // Sensible for testing.
-        },
+    // Continuous Integration mode
+    // if true, Karma captures browsers, runs the tests and exits
+    singleRun: false,
 
-        // test results reporter to use
-        // possible values: 'dots', 'progress'
-        // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress'],
-
-
-        // web server port
-        port: 9876,
-
-
-        // enable / disable colors in the output (reporters and logs)
-        colors: true,
-
-
-        // level of logging
-        // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_INFO,
-
-
-        // enable / disable watching file and executing tests whenever any file changes
-        autoWatch: false,
-
-
-        // start these browsers
-        // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['PhantomJS'],
-
-
-        // Continuous Integration mode
-        // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false,
-
-        // Concurrency level
-        // how many browser should be started simultaneous
-        concurrency: Infinity
-    });
+    // Concurrency level
+    // how many browser should be started simultaneous
+    concurrency: Infinity
 };
+
+module.exports = (config) => {
+    config.set(Object.assign({}, baseConfig, {
+
+         // level of logging
+        // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+
+        logLevel: config.LOG_INFO
+    }));
+};
+
+module.exports.baseConfig = baseConfig;
