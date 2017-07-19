@@ -7,7 +7,7 @@ import { result } from './utils';
  * #### Example:
  *
  * ```
- * import { Nodes } from 'tsumami/lib/nodes';
+ * import Nodes from 'tsumami/lib/nodes';
  *
  * const els = new Nodes('.my-class');
  * ```
@@ -36,7 +36,7 @@ export default class Nodes {
      *
      * #### Example
      * ```
-     * import { Nodes } from 'tsumami/lib/nodes';
+     * import Nodes from 'tsumami/lib/nodes';
      *
      * const els = new Nodes('.my-class');
      *
@@ -55,7 +55,7 @@ export default class Nodes {
      *
      * #### Example
      * ```
-     * import { Nodes } from 'tsumami/lib/nodes';
+     * import Nodes from 'tsumami/lib/nodes';
      *
      * const els = new Nodes('.my-class');
      *
@@ -73,7 +73,7 @@ export default class Nodes {
      *
      * #### Example
      * ```
-     * import { Nodes } from 'tsumami/lib/nodes';
+     * import Nodes from 'tsumami/lib/nodes';
      *
      * const els = new Nodes('.my-class');
      *
@@ -92,7 +92,7 @@ export default class Nodes {
      *
      * #### Example
      * ```
-     * import { Nodes } from 'tsumami/lib/nodes';
+     * import Nodes from 'tsumami/lib/nodes';
      * import { addClass } from 'tsumami';
      *
      * const els = new Nodes('.my-class');
@@ -113,7 +113,7 @@ export default class Nodes {
      *
      * #### Example
      * ```
-     * import { Nodes } from 'tsumami/lib/nodes';
+     * import Nodes from 'tsumami/lib/nodes';
      * import { qs } from 'tsumami';
      *
      * const els = new Nodes('.my-class');
@@ -135,7 +135,7 @@ export default class Nodes {
      *
      * #### Example
      * ```
-     * import { Nodes } from 'tsumami/lib/nodes';
+     * import Nodes from 'tsumami/lib/nodes';
      *
      * const els = new Nodes('.my-class');
      *
@@ -170,7 +170,7 @@ export default class Nodes {
      *
      * #### Example
      * ```
-     * import { Nodes } from 'tsumami/lib/nodes';
+     * import Nodes from 'tsumami/lib/nodes';
      *
      * const els = new Nodes('.my-class');
      *
@@ -194,7 +194,7 @@ export default class Nodes {
      *
      * #### Example
      * ```
-     * import { Nodes } from 'tsumami/lib/nodes';
+     * import Nodes from 'tsumami/lib/nodes';
      *
      * const els = new Nodes('.my-class');
      *
@@ -218,7 +218,7 @@ export default class Nodes {
      *
      * #### Example
      * ```
-     * import { Nodes } from 'tsumami/lib/nodes';
+     * import Nodes from 'tsumami/lib/nodes';
      *
      * const els = new Nodes('.my-class');
      *
