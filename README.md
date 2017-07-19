@@ -4,11 +4,30 @@
 
 ## Installation
 
+### as NPM package
+
 ```
 npm install tsumami --save
 
+# or
+
 yarn add tsumami
 ```
+
+### CDN delivered `<script>`
+
+add the following script tag before your code
+```html
+<script src="https://unpkg.com/tsumami"></script>
+```
+
+Tsumami modules will be available in the global scope as:
+
+* `tsumami.dom`: DOM utilities [docs](doc/dom.md)
+* `tsumami.EventManager`: EventManager constructor [docs](doc/events.md)
+* `tsumami.events`: global EventManager instance [docs](doc/events.md#dom-events-handler-singleton)
+* `tsumami.utils`: utilities [docs](doc/utils.md)
+* `tsumami.Nodes`: Nodes constructor [docs](doc/nodes.md)
 
 ## Usage
 
@@ -28,7 +47,7 @@ events.on(form, 'submit', (e) => {
 });
 ```
 
-**Modules Docs**
+## Modules Docs
 
 * [tsumami](doc/dom.md)
 * [tsumami/lib/events](doc/events.md)
