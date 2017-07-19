@@ -2,6 +2,7 @@
 // Generated on Fri Jul 07 2017 15:57:57 GMT+0200 (CEST)
 
 const production = process.env.PRODUCTION === 'true';
+const { name } = require('./package.json');
 
 const baseConfig = {
 
@@ -54,7 +55,7 @@ const baseConfig = {
             require('rollup-plugin-node-globals')() //eslint-disable-line
         ],
         format: 'iife',               // Helps prevent naming collisions.
-        moduleName: 'domUtils', // Required for 'iife' format.
+        moduleName: name, // Required for 'iife' format.
         sourceMap: 'inline'          // Sensible for testing.
     },
 
