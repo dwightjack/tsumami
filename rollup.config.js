@@ -16,7 +16,7 @@ const banner = `
 const baseConfig = {
     entry: 'src/umd.js',
     format: 'umd',
-    moduleName: 'domUtils',
+    moduleName: name,
     plugins: [
         resolve(),
         commonjs(),

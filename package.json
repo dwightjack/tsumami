@@ -1,10 +1,11 @@
 {
   "name": "tsumami",
   "description": "DOM Utilities",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "homepage": "https://github.com/dwightjack/tsumami",
   "author": "Marco Solazzi",
-  "license": "MIT",
+	"license": "MIT",
+	"unpkg": "umd/index.min.js",
   "main": "lib/dom.js",
   "jsnext:main": "es/dom.js",
   "module": "es/dom.js",
@@ -31,7 +32,8 @@
     "lint": "eslint -c ./src/.eslintrc.json src",
     "docs": "rimraf doc && node ./scripts/docs.js",
     "start": "node ./scripts/server.js",
-    "test": "cross-env BABEL_ENV=test karma start karma.conf.js --single-run"
+		"test": "cross-env BABEL_ENV=test karma start karma.conf.js --single-run --browsers PhantomJS",
+		"test:remote": "cross-env BABEL_ENV=test karma start karma.sauce.conf.js --single-run"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
@@ -51,6 +53,7 @@
     "karma-mocha": "1.3.0",
     "karma-phantomjs-launcher": "1.0.4",
     "karma-rollup-preprocessor": "4.0.1",
+    "karma-sauce-launcher": "1.1.0",
     "lodash": "4.17.4",
     "markdox": "0.1.10",
     "mocha": "3.4.2",
