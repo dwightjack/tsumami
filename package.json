@@ -1,11 +1,11 @@
 {
   "name": "tsumami",
   "description": "DOM Utilities",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "homepage": "https://github.com/dwightjack/tsumami",
   "author": "Marco Solazzi",
-	"license": "MIT",
-	"unpkg": "umd/index.min.js",
+  "license": "MIT",
+  "unpkg": "umd/index.min.js",
   "main": "lib/dom.js",
   "jsnext:main": "es/dom.js",
   "module": "es/dom.js",
@@ -32,8 +32,8 @@
     "lint": "eslint -c ./src/.eslintrc.json src",
     "docs": "rimraf doc && node ./scripts/docs.js",
     "start": "node ./scripts/server.js",
-		"test": "cross-env BABEL_ENV=test karma start karma.conf.js --single-run --browsers PhantomJS",
-		"test:remote": "cross-env BABEL_ENV=test karma start karma.sauce.conf.js --single-run"
+    "test": "cross-env BABEL_ENV=test karma start karma.conf.js --single-run --browsers PhantomJS",
+    "test:remote": "cross-env BABEL_ENV=test karma start karma.sauce.conf.js --single-run"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
@@ -60,6 +60,7 @@
     "rimraf": "2.6.1",
     "rollup": "0.45.2",
     "rollup-plugin-babel": "2.7.1",
+    "rollup-plugin-bundle-size": "1.0.1",
     "rollup-plugin-commonjs": "8.0.2",
     "rollup-plugin-node-globals": "1.1.0",
     "rollup-plugin-node-resolve": "3.0.0",
