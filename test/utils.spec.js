@@ -239,44 +239,60 @@ describe('utils.js', () => {
     });
 
 
-    describe('`arrayFrom()`', () => {
+    describe('`toArray()`', () => {
 
-        let legacy;
-        beforeEach(() => {
-            legacy = typeof Array.from !== 'function';
+        it('should convert array-like objects to real arrays', () => {
+            const obj = {
+                0: 'a',
+                1: 'b',
+                length: 2
+            };
+
+            const expected = ['a', 'b'];
+
+            expect(utils.toArray(obj)).toMatch(expected);
         });
 
-        if (!legacy) {
-            it('should proxy to `Array.from` when available', () => {
+        it('should clone an array', () => {
+            const arr = [0, 1];
+            const result = utils.toArray(arr);
 
-                if (Array.from) {
-                    const spy = expect.spyOn(Array, 'from');
-                    const arr = [];
+            expect(result).toNotBe(arr);
+            expect(result).toMatch(arr);
+        });
 
-                    utils.arrayFrom(arr);
+        it('should split a string', () => {
+            const str = 'test';
+            const expected = str.split('');
 
-                    expect(spy).toHaveBeenCalledWith(arr);
+            expect(utils.toArray(str)).toMatch(expected);
+        });
 
-                    Array.from.restore();
-                }
+        it('should throw on primitive numbers', () => {
+            const num = 10;
 
-            });
-        }
+            expect(() => {
+                utils.toArray(num);
+            }).toThrow();
+        });
 
-        if (legacy) {
-            it('should proxy to `Array.prototype.slice` on legacy browsers', () => {
+        it('should throw on functions', () => {
+            function aFunction() {}
 
-                const spy = expect.spyOn(Array.prototype, 'slice').andCallThrough();
-                const arr = [];
+            expect(() => {
+                utils.toArray(aFunction);
+            }).toThrow();
+        });
 
-                utils.arrayFrom(arr);
+        it('should throw on objects', () => {
+            const obj = {
+                length: 'invalid'
+            };
 
-                expect(spy.calls[0].context).toBe(arr);
-
-                Array.prototype.slice.restore();
-
-            });
-        }
+            expect(() => {
+                utils.toArray(obj);
+            }).toThrow();
+        });
 
     });
 });

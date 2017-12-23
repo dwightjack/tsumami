@@ -1,4 +1,18 @@
 const CAMEL_CASE_REGEXP = /-([a-z])/ig;
+const MAX_SAFE_INTEGER = 9007199254740991;
+
+// borrowed from lodash
+function isLength(value) {
+    return typeof value === 'number' &&
+      value > -1 && value % 1 === 0 && value <= MAX_SAFE_INTEGER;
+}
+
+// borrowed from lodash
+function isArrayLike(value) {
+    return value != null && typeof value !== 'function' && isLength(value.length);
+}
+
+const arrayFrom = Array.from || ((obj) => Array.prototype.slice.call(obj));
 
 /**
  * # Utility Functions
@@ -71,12 +85,17 @@ export const parseString = (value) => {
 
 
 /**
- * Cross-browser `Array.from` implementation
+ * Converts array-like objects into an array
  *
- * @name arrayFrom
+ * @name toArray
  * @function
  * @private
  * @param {*} - obj Object to convert to an array
  * @returns {array}
  */
-export const arrayFrom = Array.from || ((obj) => Array.prototype.slice.call(obj));
+export const toArray = (obj) => {
+    if (isArrayLike(obj)) {
+        return arrayFrom(obj);
+    }
+    throw new TypeError('Object is not array-like');
+};
