@@ -51,9 +51,9 @@ Accepts a string and tries to parse it as boolean, number or JSON
 
 * 
 
-## arrayFrom(-)
+## toArray(-)
 
-Cross-browser `Array.from` implementation
+Converts array-like objects into an array
 
 #### Params:
 

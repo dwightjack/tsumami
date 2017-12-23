@@ -106,9 +106,9 @@ import { byId, data } from 'tsumami';
 
 const content = byId('content');
 
-const name = attr(content, 'name'); // "my-content"
-const idx = attr(content, 'idx'); // 1
-const bool = attr(content, 'bool'); // false
+const name = data(content, 'name'); // "my-content"
+const idx = data(content, 'idx'); // 1
+const bool = data(content, 'bool'); // false
 ```
 
 #### Params:
@@ -146,6 +146,8 @@ const contentArray = toArray(content);
 #### Return:
 
 * **`array`** 
+
+## matches 
 
 Returns `true` if the `element` would be selected by the specified `selector` string; otherwise, returns false.
 
@@ -202,6 +204,7 @@ const parentLists = parents(listItem, 'ul');
 ## closest(element, selector)
 
 Gets the first element that matches `selector` by testing the element itself and traversing up through its ancestors in the DOM tree.
+Returns `null` if nothing matches
 
 Will use native [`Element.prototype.closest`](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest) if available.
 
