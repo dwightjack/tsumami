@@ -1,6 +1,6 @@
 
 
-<!-- Start src/events.js -->
+<!-- Start src\events.js -->
 
 ## DOM events handler
 
@@ -184,5 +184,5 @@ import { events } from 'tsumami/lib/events';
 events.on(...)
 ```
 
-<!-- End src/events.js -->
+<!-- End src\events.js -->
 

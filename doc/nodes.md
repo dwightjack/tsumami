@@ -1,6 +1,6 @@
 
 
-<!-- Start src/nodes.js -->
+<!-- Start src\nodes.js -->
 
 ## Nodes 
 
@@ -235,5 +235,5 @@ els.toggleClass('is-active', (el, index) => index === 0); //added just to the fi
 
 * **`Nodes`** 
 
-<!-- End src/nodes.js -->
+<!-- End src\nodes.js -->
 

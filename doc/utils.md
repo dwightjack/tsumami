@@ -1,6 +1,6 @@
 
 
-<!-- Start src/utils.js -->
+<!-- Start src\utils.js -->
 
 # Utility Functions
 
@@ -63,5 +63,5 @@ Cross-browser `Array.from` implementation
 
 * **`array`** 
 
-<!-- End src/utils.js -->
+<!-- End src\utils.js -->
 

@@ -1,6 +1,6 @@
 
 
-<!-- Start src/dom.js -->
+<!-- Start src\dom.js -->
 
 # DOM Utility Functions
 
@@ -315,5 +315,5 @@ toggleClass(content, 'random-class', true)
 * **`string`** *className* - Class to toggle
 * **`boolean`** *[toggle]* - Force add or removal of the class
 
-<!-- End src/dom.js -->
+<!-- End src\dom.js -->
 
