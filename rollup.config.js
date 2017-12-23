@@ -2,7 +2,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 import uglify from 'rollup-plugin-uglify';
-import bundlesize from 'rollup-plugin-bundle-size';
+import filesize from 'rollup-plugin-filesize';
 
 import { version, name, license, author, homepage } from './package.json';
 
@@ -20,30 +20,35 @@ const plugins = [
     }),
     commonjs(),
     babel({
+        plugins: ['external-helpers'],
         exclude: 'node_modules/**' // only transpile our source code
     })
 ];
 
 const baseConfig = {
-    entry: 'src/umd.js',
-    format: 'umd',
+    input: 'src/umd.js',
     amd: { id: 'tsumami' },
-    moduleName: name,
     banner,
-    external: ['desandro-classie'],
+    external: ['desandro-classie']
+};
+
+const output = (file) => ({
+    format: 'umd',
+    file,
+    name,
+    sourcemap: true,
     globals: {
         'desandro-classie': 'classie'
-    },
-    sourceMap: true
-};
+    }
+});
 
 export default [
     Object.assign({
-        dest: 'umd/index.js',
-        plugins: [...plugins, bundlesize()]
+        output: output('umd/index.js'),
+        plugins: [...plugins, filesize()]
     }, baseConfig),
     Object.assign({
-        dest: 'umd/index.min.js',
+        output: output('umd/index.min.js'),
         plugins: [...plugins, uglify({
             warnings: false,
             mangle: true,
@@ -53,6 +58,6 @@ export default [
             output: {
                 beautify: false
             }
-        }), bundlesize()]
+        }), filesize()]
     }, baseConfig)
 ];

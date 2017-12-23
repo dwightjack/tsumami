@@ -1,13 +1,15 @@
 import classie from 'desandro-classie';
 
-import { parseString, arrayFrom, toCamelCase } from './utils';
+import { parseString, toArray as toArrayUtil, toCamelCase } from './utils';
+
+const ElemProto = Element.prototype;
 
 const matchesProto = Element.prototype.matches ||
-        Element.prototype.matchesSelector ||
-        Element.prototype.mozMatchesSelector ||
-        Element.prototype.msMatchesSelector ||
-        Element.prototype.oMatchesSelector ||
-        Element.prototype.webkitMatchesSelector ||
+        ElemProto.matchesSelector ||
+        ElemProto.mozMatchesSelector ||
+        ElemProto.msMatchesSelector ||
+        ElemProto.oMatchesSelector ||
+        ElemProto.webkitMatchesSelector ||
         function matchesSelector(s) {
             const matches = (this.document || this.ownerDocument).querySelectorAll(s);
             let i = matches.length;
@@ -56,7 +58,7 @@ export const byId = (id) => document.getElementById(id);
  * @param {Element|Document} [ctx=document] - Root element. `document` by default
  * @return {Array}
  */
-export const byClassName = (className, ctx = document) => arrayFrom(ctx.getElementsByClassName(className));
+export const byClassName = (className, ctx = document) => toArrayUtil(ctx.getElementsByClassName(className));
 
 /**
  * Returns the first element within the document that matches the specified group of selectors
@@ -96,7 +98,7 @@ export const qs = (selector, ctx = document) => ctx.querySelector(selector);
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
  * @return {Array}
  */
-export const qsa = (selector, ctx = document) => arrayFrom(ctx.querySelectorAll(selector));
+export const qsa = (selector, ctx = document) => toArrayUtil(ctx.querySelectorAll(selector));
 
 /**
  * Returns a parsed data attribute from the passed-in node. If not found returns `null`
@@ -110,9 +112,9 @@ export const qsa = (selector, ctx = document) => arrayFrom(ctx.querySelectorAll(
  *
  * const content = byId('content');
  *
- * const name = attr(content, 'name'); // "my-content"
- * const idx = attr(content, 'idx'); // 1
- * const bool = attr(content, 'bool'); // false
+ * const name = data(content, 'name'); // "my-content"
+ * const idx = data(content, 'idx'); // 1
+ * const bool = data(content, 'bool'); // false
  * ```
  *
  * @name data
@@ -126,7 +128,7 @@ export const data = (element, attr) => {
         return element.hasAttribute('data-' + attr) ? parseString(element.getAttribute('data-' + attr)) : undefined;
     }
     const attributes = element.attributes;
-    return element.hasAttributes() ? arrayFrom(attributes).reduce((attrs, a, i) => {
+    return element.hasAttributes() ? toArrayUtil(attributes).reduce((attrs, a, i) => {
         const { name = '', value } = attributes[i] || {};
         if (name.indexOf('data-') === 0) {
             const key = toCamelCase(name.replace(/^data-/, ''));
@@ -165,7 +167,7 @@ export const toArray = (element) => {
     if (Array.isArray(element)) {
         return element;
     }
-    return (element instanceof NodeList) ? arrayFrom(element) : [element];
+    return (element instanceof NodeList) ? toArrayUtil(element) : [element];
 };
 
 /**
@@ -187,6 +189,7 @@ export const toArray = (element) => {
  * }
  * ```
  *
+ * @name matches
  * @param {Element} element
  * @param {string} selector
  * @return {boolean}
@@ -235,6 +238,7 @@ export const parents = (element, selector) => {
 
 /**
  * Gets the first element that matches `selector` by testing the element itself and traversing up through its ancestors in the DOM tree.
+ * Returns `null` if nothing matches
  *
  * Will use native [`Element.prototype.closest`](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest) if available.
  *
@@ -254,7 +258,8 @@ export const parents = (element, selector) => {
  * @param {string} selector - A string containing a CSS selector expression to match
  * @returns {*}
  */
-export const closest = Element.prototype.closest || function closest(element, selector) {
+const closestProto = ElemProto.closest;
+export const closest = closestProto ? (element, selector) => closestProto.call(element, selector) : function closest(element, selector) {
     let parent = element;
 
     while (parent && parent !== document) {
@@ -264,7 +269,7 @@ export const closest = Element.prototype.closest || function closest(element, se
         parent = parent.parentElement;
     }
 
-    return undefined;
+    return null;
 };
 
 

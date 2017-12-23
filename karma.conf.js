@@ -46,6 +46,7 @@ const baseConfig = {
             require('rollup-plugin-node-resolve')(), //eslint-disable-line
             require('rollup-plugin-commonjs')(), //eslint-disable-line
             require('rollup-plugin-babel')({ //eslint-disable-line
+                plugins: ['external-helpers'],
                 exclude: 'node_modules/**'
             }),
             require('rollup-plugin-replace')({ //eslint-disable-line
@@ -54,9 +55,11 @@ const baseConfig = {
             require('rollup-plugin-stub')(), //eslint-disable-line
             require('rollup-plugin-node-globals')() //eslint-disable-line
         ],
-        format: 'iife',               // Helps prevent naming collisions.
-        moduleName: name, // Required for 'iife' format.
-        sourceMap: 'inline'          // Sensible for testing.
+        output: {
+            format: 'iife',               // Helps prevent naming collisions.
+            name, // Required for 'iife' format.
+            sourcemap: 'inline'          // Sensible for testing.
+        }
     },
 
     // test results reporter to use

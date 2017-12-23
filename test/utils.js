@@ -7,10 +7,15 @@ export const mount = (template) => { //eslint-disable-line import/prefer-default
 
 export const simulate = (el, name, { bubbles = true, cancelable = true } = {}, constructor = 'MouseEvents') => {
 
-    const event = document.createEvent(constructor);
-
-    event.initEvent(name, bubbles, cancelable);
-    el.dispatchEvent(event);
+    let event;
+    if (document.createEvent) {
+        event = document.createEvent(constructor);
+        event.initEvent(name, bubbles, cancelable);
+        el.dispatchEvent(event);
+    } else if (document.createEventObject) {
+        event = document.createEventObject();
+        el.fireEvent(`on${name}`, event);
+    }
 
     return event;
 };
