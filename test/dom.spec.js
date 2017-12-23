@@ -222,18 +222,18 @@ describe('dom.js', () => {
             mount('dom.html');
         });
 
-        it('should use return a matched element', () => {
+        it('should return a matched element', () => {
             const el = dom.byId('inner-title');
             const result = dom.closest(el, '#nested');
 
             expect(result).toBe(dom.byId('nested'));
         });
 
-        it('should use return `undefined` when nothing matches', () => {
+        it('should return `null` when nothing matches', () => {
             const el = dom.byId('inner-title');
             const result = dom.closest(el, '#error');
 
-            expect(result).toBe(undefined);
+            expect(result).toBe(null);
         });
 
         it('should start matching from the element itself', () => {
