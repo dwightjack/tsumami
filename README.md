@@ -18,7 +18,6 @@ yarn add tsumami
 
 add the following script tags before your code
 ```html
-<script src="https://unpkg.com/desandro-classie"></script> <!-- hard dependency -->
 <script src="https://unpkg.com/tsumami"></script>
 ```
 
