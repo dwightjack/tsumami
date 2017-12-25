@@ -23,7 +23,7 @@ const matchesProto = Element.prototype.matches ||
 
 
 /**
- * Returns a reference to the element by its ID.
+ * Returns a reference to an element by its ID.
  *
  * #### Example:
  *
@@ -121,7 +121,7 @@ export const qsa = (selector, ctx = document) => toArrayUtil(ctx.querySelectorAl
  * @function
  * @param {Element} element - DOM Element
  * @param {string} [attr] - Data attribute to retrieve (without the `data-`). If empty will return an object with every `data-` attribute as key.
- * @return {*|null}
+ * @return {*}
  */
 export const data = (element, attr) => {
     if (attr) {
@@ -171,7 +171,7 @@ export const toArray = (element) => {
 };
 
 /**
- * Returns `true` if the `element` would be selected by the specified `selector` string; otherwise, returns false.
+ * Returns `true` if `element` would be selected by the specified `selector` string; otherwise, returns false.
  *
  * #### Example:
  *
@@ -238,7 +238,7 @@ export const parents = (element, selector) => {
 
 /**
  * Gets the first element that matches `selector` by testing the element itself and traversing up through its ancestors in the DOM tree.
- * Returns `null` if nothing matches
+ * Returns `null` if nothing matches.
  *
  * Will use native [`Element.prototype.closest`](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest) if available.
  *
@@ -295,7 +295,7 @@ export const closest = closestProto ? (element, selector) => closestProto.call(e
 export const addClass = classie.add;
 
 /**
- * Removes a new class to the element
+ * Removes a class from the element
  *
  * #### Example
  *
@@ -315,7 +315,7 @@ export const addClass = classie.add;
 export const removeClass = classie.remove;
 
 /**
- * Checks if an element as a given class
+ * Checks if an element has a given class
  *
  * #### Example
  *
@@ -337,8 +337,10 @@ export const removeClass = classie.remove;
 export const hasClass = classie.hasClass;
 
 /**
+ * Toggle a class on the element.
+ *
  * If class exists then removes it, if not, then adds it.
- * When the second argument is present and is true, add specified class value, if is false removes it.
+ * When the second argument is present and is `true`, adds specified class value, if is `false` removes it.
  *
  * #### Example
  *

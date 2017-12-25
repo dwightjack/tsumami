@@ -5,7 +5,7 @@ const forceCaptureEvents = ['focus', 'blur'];
 /**
  * ## DOM events handler
  *
- * Available as a constructor (`EventManager`) and as a singleton hub (`events`)
+ * Available as a constructor (`EventManager`) and as a singleton event hub (`events`)
  */
 
 /**
@@ -144,7 +144,7 @@ class EventManager {
     }
 
     /**
-     * Attaches an event handler for all elements that match the selector, now or in the future, based on a specific root element.
+     * Attaches an event handler for all elements that match a `selector`, now or in the future, based on a specific root element.
      * Returns an unbind function
      *
      * #### Example:
@@ -168,7 +168,7 @@ class EventManager {
      * ```
      *
      * @method
-     * @param {Element} element - Target element
+     * @param {Element} element - Root element
      * @param {string} selector - A selector to filter the elements that trigger the event
      * @param {string} event - Event to listen for
      * @param {function} handler - Event handler
@@ -194,7 +194,7 @@ class EventManager {
     }
 
     /**
-     * Removes an event handler for all elements that match the selector, now or in the future, based on a specific root element.
+     * Removes an event handler for all elements that match a `selector`, now or in the future, based on a specific root element.
      *
      * #### Example:
      *
@@ -218,7 +218,7 @@ class EventManager {
      * ```
      *
      * @method
-     * @param {Element} element - Target element
+     * @param {Element} element - Root element
      * @param {string} [selector] - A selector to filter the elements that trigger the event
      * @param {string} [event] - Event to listen for
      * @param {function} [handler] - Event handler

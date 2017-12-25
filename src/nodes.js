@@ -101,7 +101,7 @@ export default class Nodes {
      * ```
      *
      * @param {function} iterator - Iterator function
-     * @returns {Element|undefined}
+     * @returns {Nodes}
      */
     forEach(iterator) {
         this.els.forEach(iterator);
