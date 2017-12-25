@@ -98,7 +98,7 @@ els.forEach((el, index) => addClass(el, `element-${index}`));
 
 #### Return:
 
-* **`Element`** 
+* **`Nodes`** 
 
 ## indexOf(target)
 

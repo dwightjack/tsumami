@@ -4,7 +4,7 @@
 
 ## DOM events handler
 
-Available as a constructor (`EventManager`) and as a singleton hub (`events`)
+Available as a constructor (`EventManager`) and as a singleton event hub (`events`)
 
 ## EventManager 
 
@@ -84,7 +84,7 @@ events.off(btn);
 
 ## delegate(element, selector, event, handler, [capture=true])
 
-Attaches an event handler for all elements that match the selector, now or in the future, based on a specific root element.
+Attaches an event handler for all elements that match a `selector`, now or in the future, based on a specific root element.
 Returns an unbind function
 
 #### Example:
@@ -109,7 +109,7 @@ undelegate();
 
 #### Params:
 
-* **`Element`** *element* - Target element
+* **`Element`** *element* - Root element
 * **`string`** *selector* - A selector to filter the elements that trigger the event
 * **`string`** *event* - Event to listen for
 * **`function`** *handler* - Event handler
@@ -121,7 +121,7 @@ undelegate();
 
 ## undelegate(element, [selector], [event], [handler], [capture=true])
 
-Removes an event handler for all elements that match the selector, now or in the future, based on a specific root element.
+Removes an event handler for all elements that match a `selector`, now or in the future, based on a specific root element.
 
 #### Example:
 
@@ -146,7 +146,7 @@ events.undelegate(nav, 'a.nav-items' 'click', handler);
 
 #### Params:
 
-* **`Element`** *element* - Target element
+* **`Element`** *element* - Root element
 * **`string`** *[selector]* - A selector to filter the elements that trigger the event
 * **`string`** *[event]* - Event to listen for
 * **`function`** *[handler]* - Event handler

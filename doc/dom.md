@@ -6,7 +6,7 @@
 
 ## byId(id)
 
-Returns a reference to the element by its ID.
+Returns a reference to an element by its ID.
 
 #### Example:
 
@@ -149,7 +149,7 @@ const contentArray = toArray(content);
 
 ## matches 
 
-Returns `true` if the `element` would be selected by the specified `selector` string; otherwise, returns false.
+Returns `true` if `element` would be selected by the specified `selector` string; otherwise, returns false.
 
 #### Example:
 
@@ -204,7 +204,7 @@ const parentLists = parents(listItem, 'ul');
 ## closest(element, selector)
 
 Gets the first element that matches `selector` by testing the element itself and traversing up through its ancestors in the DOM tree.
-Returns `null` if nothing matches
+Returns `null` if nothing matches.
 
 Will use native [`Element.prototype.closest`](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest) if available.
 
@@ -248,7 +248,7 @@ addClass(content, 'new-class');
 
 ## removeClass(element, className)
 
-Removes a new class to the element
+Removes a class from the element
 
 #### Example
 
@@ -267,7 +267,7 @@ removeClass(content, 'remove-me');
 
 ## hasClass(element, className)
 
-Checks if an element as a given class
+Checks if an element has a given class
 
 #### Example
 
@@ -288,8 +288,10 @@ if (hasClass(content, 'remove-me')) {
 
 ## toggleClass(element, className, [toggle])
 
+Toggle a class on the element.
+
 If class exists then removes it, if not, then adds it.
-When the second argument is present and is true, add specified class value, if is false removes it.
+When the second argument is present and is `true`, adds specified class value, if is `false` removes it.
 
 #### Example
 
