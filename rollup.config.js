@@ -28,18 +28,14 @@ const plugins = [
 const baseConfig = {
     input: 'src/umd.js',
     amd: { id: 'tsumami' },
-    banner,
-    external: ['desandro-classie']
+    banner
 };
 
 const output = (file) => ({
     format: 'umd',
     file,
     name,
-    sourcemap: true,
-    globals: {
-        'desandro-classie': 'classie'
-    }
+    sourcemap: true
 });
 
 export default [
