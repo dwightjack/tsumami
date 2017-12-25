@@ -71,6 +71,6 @@
     "serve-index": "1.9.1"
   },
   "dependencies": {
-    "desandro-classie": "1.0.1"
+    "desandro-classie": "^1.0.0"
   }
 }
